@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+    --pageColor: #ffffff;
+    --secPageColor: #6cbdfa;
+    --white: #ffffff;
+    --btnColor: #12229d;
+    font-size: 62.5%;
+    overflow-x: hidden;
+}
+
+body, html{
+    margin: 0;
+    min-width: 100vw;
+}
+
+#root, .App{
+    background-color: var(--pageColor);
+    overflow-x: hidden;
+
+    height: 100%;
+    
+    width: 100%;
+}
+
+#dark {
+    background-color: #121212;
+}
+
+::-webkit-scrollbar {
+    width: 10px; 
+    background-color: #f5f5f5; 
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--btnColor); 
+    border-radius: 6px; 
+  }
+  @media only screen and (max-width:900px) {
+    .college{
+        width: 500px !important;
+    }
+}
+@media only screen and (max-width:500px) {
+.college{
+    width: 400px !important;
+}
+}
+@media only screen and (max-width:400px) {
+.college{
+    width: 300px !important;
+}
+}
+
+ 
+  

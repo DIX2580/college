@@ -1,0 +1,179 @@
+{
+  "jobSectors": {
+    "publicSector": {
+      "sectorName": "Public Sector",
+      "jobs": {
+        "IES": {
+          "fullName": "Indian Engineering Services",
+          "careerPaths": [
+            {
+              "pathId": 1,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "Undergraduate (B.Tech/B.E.)" },
+                { "stepNumber": 4, "description": "IES Preparation" },
+                { "stepNumber": 5, "description": "UPSC ESE Exam" }
+              ]
+            },
+            {
+              "pathId": 2,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Diploma" },
+                { "stepNumber": 3, "description": "B.Tech (Lateral Entry) after Diploma" },
+                { "stepNumber": 4, "description": "UPSC ESE" },
+                { "stepNumber": 5, "description": "Done" }
+              ]
+            },
+            {
+              "pathId": 3,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "B.Sc. + M.Sc. in Engineering Fields" },
+                { "stepNumber": 4, "description": "GATE + PSU Job + IES Equivalent Role" },
+                { "stepNumber": 5, "description": "IES Equivalent Govt Job" }
+              ]
+            },
+            {
+              "pathId": 4,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "Foreign Engineering Degree" },
+                { "stepNumber": 4, "description": "Experience + Apply for Govt Roles" },
+                { "stepNumber": 5, "description": "Govt Technical Role" }
+              ]
+            }
+          ]
+        },
+        "IAS": {
+          "fullName": "Indian Administrative Service",
+          "careerPaths": [
+            {
+              "pathId": 1,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "Bachelor's Degree (Any)" },
+                { "stepNumber": 4, "description": "UPSC CSE Exam" },
+                { "stepNumber": 5, "description": "IAS Training" }
+              ]
+            },
+            {
+              "pathId": 2,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "Bachelor's Degree" },
+                { "stepNumber": 4, "description": "Work Experience in Govt/PSUs" },
+                { "stepNumber": 5, "description": "UPSC CSE (Lateral Entry for Experienced Candidates)" }
+              ]
+            },
+            {
+              "pathId": 3,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "Bachelor's Degree" },
+                { "stepNumber": 4, "description": "State Civil Services Exam (PCS)" },
+                { "stepNumber": 5, "description": "Promotion to IAS" }
+              ]
+            },
+            {
+              "pathId": 4,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 12 (Humanities Preferred)" },
+                { "stepNumber": 3, "description": "Bachelor's in Political Science/Public Administration" },
+                { "stepNumber": 4, "description": "UPSC CSE Exam" },
+                { "stepNumber": 5, "description": "IAS" }
+              ]
+            }
+          ]
+        },
+        "IPS": {
+          "fullName": "Indian Police Service",
+          "careerPaths": [
+            {
+              "pathId": 1,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 12 (Any Stream)" },
+                { "stepNumber": 3, "description": "Bachelor's in Criminology/Law/Public Administration" },
+                { "stepNumber": 4, "description": "UPSC CSE Exam" },
+                { "stepNumber": 5, "description": "IPS Training (Sardar Vallabhbhai Patel National Police Academy)" }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "privateSector": {
+      "sectorName": "Private Sector",
+      "jobs": {
+        "SoftwareEngineer": {
+          "fullName": "Software Engineer",
+          "careerPaths": [
+            {
+              "pathId": 1,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "B.Tech/B.E. in Computer Science or IT" },
+                { "stepNumber": 4, "description": "M.Tech in CS/IT + DSA, Coding, Development" },
+                { "stepNumber": 5, "description": "Company Interviews, Online Assessments" }
+              ]
+            },
+            {
+              "pathId": 2,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "B.Sc. in Computer Science" },
+                { "stepNumber": 4, "description": "MCA + Coding practice, Projects, Internships" },
+                { "stepNumber": 5, "description": "Technical Interviews, Coding Contests" }
+              ]
+            },
+            {
+              "pathId": 3,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "BCA" },
+                { "stepNumber": 4, "description": "MCA + Competitive Programming, Freelancing" },
+                { "stepNumber": 5, "description": "Job Portals, On-Campus Placements" }
+              ]
+            }
+          ]
+        },
+        "MechanicalEngineer": {
+          "fullName": "Mechanical Engineer",
+          "careerPaths": [
+            {
+              "pathId": 1,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "B.Tech/B.E. in Mechanical Engineering" },
+                { "stepNumber": 4, "description": "M.Tech in ME + CAD, Robotics, Industrial Training" },
+                { "stepNumber": 5, "description": "GATE Exam, PSUs, Industry Placements" }
+              ]
+            },
+            {
+              "pathId": 2,
+              "steps": [
+                { "stepNumber": 1, "description": "Class 5-10" },
+                { "stepNumber": 2, "description": "Class 11-12" },
+                { "stepNumber": 3, "description": "B.Sc. in Applied Mechanics" },
+                { "stepNumber": 4, "description": "M.Sc. in Engineering Mechanics + Research" },
+                { "stepNumber": 5, "description": "Research Fellowship, PhD, Private Firms" }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

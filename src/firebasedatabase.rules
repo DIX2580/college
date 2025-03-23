@@ -1,0 +1,12 @@
+{
+  "rules": {
+    ".read": true, 
+    ".write": "auth != null", // Allow write access to authenticated users only
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    }
+  }
+}

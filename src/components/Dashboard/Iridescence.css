@@ -1,0 +1,211 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Poppins:wght@500&display=swap");
+
+/* Global Styling */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f4f4f9;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Container to center content */
+.iridescence-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+}
+
+/* Main Content Box */
+.demo {
+  background-color: #FFFFFF;
+  max-width: 500px;
+  width: 90%;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Heading */
+h2 {
+  font-family: 'Merriweather', serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1.2rem;
+  background-color: black;
+  padding: 10px;
+  color: white;
+  border: 2px solid white;
+  border-radius: 25px;
+  display: inline-block;
+  width: 400px;
+  max-width:400px;
+}
+
+/* Input Field */
+input {
+  padding: 0.8rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  outline: none;
+  background-color: #F8F8FF;
+  border: 1px solid #DADCF5;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* Button Container */
+.btn {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+/* Button Styling */
+button {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  transition: 0.3s ease;
+  max-width: 150px;
+  width: 100%;
+}
+
+/* Cancel Button */
+button.cancel {
+  background-color: #fff;
+  border: 1px solid #DADCF5;
+}
+
+button.cancel:hover {
+  background-color: #DADCF5;
+}
+
+/* Add Button */
+button.add {
+  background-color: #7758CE;
+  border: 1px solid #7758CE;
+  color: #fff;
+}
+
+button.add:hover {
+  background-color: #5e3ea8;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .demo {
+    padding: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  input {
+    font-size: 1rem;
+    padding: 0.6rem;
+  }
+
+  .btn {
+    gap: 0.5rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    max-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .demo {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .btn {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+.career-summary-box {
+  background-color: white;
+  border-radius: 5px;
+  max-width: 600px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 10px;
+  padding:5px;
+}
+
+.sector{
+  padding:15px;
+  margin:10px;
+  width:200px;
+  font-size: 12px;
+
+}
+.boxp{
+  height:50px;
+}
+.boxcurrentclass{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  width:350px;
+
+}
+/* CSS for blurring the background inside the border */
+
+.form-container {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  overflow: hidden; /* Important to contain the blur effect */
+}
+
+.blur-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.2); /* Adjust opacity as needed */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* For Safari */
+  z-index: 1; /* Ensure it's behind the content */
+}
+
+.form-content {
+  position: relative;
+  z-index: 2; /* Ensure content is above the blur layer */
+  padding: 2rem;
+}
+
+/* For the wavy background effect visible in your image */
+.wave-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  /* The wave effect would be preserved behind the blur */
+}
+

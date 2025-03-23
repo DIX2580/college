@@ -1,0 +1,646 @@
+[
+    {
+        "id": 1,
+        "name": "Sahil Ali",
+        "course": "BTech",
+        "branch": "CSE",
+        "year": "4th year",
+        "position": "Backend Developer at Counsellor",
+        "college": "Echelon Institute of Technology",
+        "achievements": [
+            "GDSC Lead 2023 at Google",
+            "Github Mentor at Microsoft"
+        ],
+        "socialLinks": {
+            "linkedin": "https://www.linkedin.com/in/thestarsahil",
+            "github": "https://github.com/thestarsahil",
+            "twitter": "https://twitter.com/thestarsahil"
+        },
+        "availableSlots": [
+            "Saturday 11 AM - 1 PM",
+            "Sunday 10 AM - 12 PM"
+        ],
+        "personalProjects": [
+            {
+                "title": "ImageX",
+                "description": " Diagnosis of Dermatological ImagineCup Microsoft-24",
+                "link": "https://github.com/Diagnosis-of-Dermatological-IC-24"
+            },
+            {
+                "title": "Contoso-Real-Estate (Bug Finder Hackathon @Microsoft",
+                "description": "A web application that helps users find real estate properties",
+                "link": "https://github.com/Azure-Samples/contoso-real-estate"
+            },
+            {
+                "title": "MentalMate",
+                "description": "Implemented Azure Health Chatbot on website. Authenticate and integrate with EMR data using FHIR data connections to personalize patient flow",
+                "link": "https://github.com/thestarsahil/Mentalmate"
+            },
+            {
+                "title": "Book Finder",
+                "description": " A web application that helps users find books based on their preferences and interests.",
+                "link": ""
+            }
+        ],
+        "skills": [
+            "C++",
+            ".NetCore",
+            "Node.js",
+            "ReactJS",
+            "Azure SQL",
+            "MySQL",
+            "CosmosDB",
+            "Blob Storage",
+            "Load Balancer"
+        ],
+        "certifications": [
+            "AI Microsoft Certified",
+            "IIT Madras Entrepreneurship Certified"
+        ],
+        "contact": {
+            "email": "sahilali88827@gmail.com",
+            "phone": "+91 XXXXXXXXX"
+        }
+    },
+    {
+        "id": 2,
+        "name": "Jai Mishra",
+        "course": "BTech",
+        "branch": "CSE",
+        "year": "3rd year",
+        "position": "Web Developer NextJs",
+        "college": "Echelon Institute of Technology",
+        "achievements": [
+            "Certified-DSA, Java from Coding Ninjas",
+            "Participated in Various Hackathon "
+        ],
+        "socialLinks": {
+            "linkedin": "https://www.linkedin.com/in/jai47/",
+            "github": "https://github.com/",
+            "twitter": "https://twitter.com/"
+        },
+        "availableSlots": [
+            "Tuesday 1 PM - 3 PM",
+            "Thursday 11 AM - 1 PM"
+        ],
+        "personalProjects": [
+            {
+                "title": "Full Stack E-Commerce Website",
+                "description": "A scalable cloud storage solution using AWS S3.",
+                "link": ""
+            }
+        ],
+        "skills": [
+            "AWS",
+            "Google Cloud",
+            "Docker",
+            "Kubernetes"
+        ],
+        "certifications": [
+            "AWS Certified Solutions Architect",
+            "Google Cloud Certified Associate Cloud Engineer"
+        ],
+        "contact": {
+            "email": "official.jaimishra@gmail.com",
+            "phone": "+91 XXXXXXXXX"
+        }
+    },
+    {
+        "id": 3,
+        "name": "Vidushi Gandhi",
+        "course": "BTech",
+        "year": "Passout",
+        "position": "Mern Stack Developer",
+        "college": "Echelon Institute of Technology",
+        "achievements": [
+            "Completed 5 Major Projects in Web Development",
+            "Certified MERN Stack Developer"
+        ],
+        "socialLinks": {
+            "linkedin": "https://www.linkedin.com/in/vidushi",
+            "github": "https://github.com/vidushi"
+        },
+        "availableSlots": [
+            "Monday 10 AM - 12 PM",
+            "Thursday 2 PM - 4 PM"
+        ],
+        "personalProjects": [
+            {
+                "title": "Job Board Application",
+                "description": "A job board application built with the MERN stack.",
+                "link": "https://github.com/vidushi/job-board-app"
+            }
+        ],
+        "skills": [
+            "JavaScript",
+            "MongoDB",
+            "Express",
+            "React",
+            "Node.js"
+        ],
+        "certifications": [
+            "MERN Stack Developer Certification",
+            "Advanced Web Development"
+        ],
+        "contact": {
+            "email": "vidushi@example.com",
+            "phone": "+91 9876543212"
+        }
+    },
+    {
+        "id": 4,
+        "name": "Sneha Sheoran",
+        "course": "BTech",
+        "branch": "CSE",
+        "year": "1st Year",
+        "position": "Backend Developer",
+        "college": "Echelon Institute of Technology", 
+        "achievements": [
+            "Computer vision ",
+            ""
+        ],
+        "socialLinks": {
+            "linkedin": "https://www.linkedin.com/in/saksham-mittal-85a39a2a0",
+            "github": "https://github.com/sakshammittal1803",
+            "twitter": "https://x.com/saksham54117635?t=RbriR5Aq6mo2cSSPkxgciQ&s=09"
+        },
+        "availableSlots": [
+            "Saturday 11 AM - 1 PM",
+            "Sunday 10 AM - 12 PM"
+        ],
+        "personalProjects": [
+            {
+                "title": "AR Shirtcraft",
+                "description": "it's about creating shirts with good graphics using ai",
+                "link": "https://github.com/sakshammittal1803/Hackarthon-project"
+            }
+        ],
+        "skills": [
+            "Python ",
+            "Data science ",
+            "Artificial intelligence",
+            "Basic level of DSA "
+        ],
+        "certifications": [
+            "Mongo DB course"
+        ],
+        "contact": {
+            "email": "sheoransneha19@gmail.com",
+            "phone": "+91 9625644178"
+        }
+    },
+        { 
+            "id": 5,
+            "name": "Granth Kumar",
+            "course": "BCA",
+            "branch": "Data Science",
+            "year": "1st",
+            "position": "",
+            "college": "Echelon Institute of Technology",
+            "achievements": [
+                "",
+                ""
+            ],
+            "socialLinks": {
+                "linkedin": "https://www.linkedin.com/in/granth-kumar-2a0168210/",
+                "github": "https://github.com/Granth2006",
+                "twitter": "https://x.com/_granth_kumar_"
+            },
+            "availableSlots": [
+                "Tuesday 9 AM - 11 AM",
+                "Friday 3 PM - 5 PM"
+            ],
+            "personalProjects": [
+                {
+                    "title": "",
+                    "description": "",
+                    "link": "https://github.com/"
+                }
+            ],
+            "skills": [
+                "HTML",
+                "CSS",
+                "Basic JS",
+                "WordPress"
+            ],
+            "certifications": [
+                "APNA COLLEGE Delta 3.0 "
+            ],
+            "contact": {
+                "email": "granthkumar2006@gmail.com"
+            }
+        },
+    {
+            "id": 6,
+            "name": "RAGHAV ASTHANA",
+            "course": "BTech",
+            "branch": "AIML",
+            "year": "2",
+            "position": "AIML SUBLEAD GDSC,MLSA SUB LEAD",
+            "college": "Echelon Institute of Technology",
+            "socialLinks": {
+                "linkedin": "https://www.linkedin.com/in/raghav-asthana-54163b188?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BLvbA0O1%2BQHWupoxFVGhaWw%3D%3D",
+                "github": "https://github.com/RAGHAV18ASTHANA"
+           
+            },
+            "availableSlots": [
+               "WEDNESDAY 2.30 TO 4 PM"
+            ],
+            "personalProjects":  {
+                "title": "AMAZON RESPOSIVE WEBPAGE",
+                "description": " ",
+                "link": "https://github.com/sakshammittal1803/"
+            },
+            "skills": [
+                "PYTHON DEVELOPER",
+                "DJANGO",
+               "Web Development",
+                "NUMPY &PANDAS",
+                "DATA ANALYTICS"
+            ],
+            "certifications": [
+                "INTERMEDIATE PYTHON (DATACAMP)",
+                "PYTHON BASICS (HACKER RANK)"
+            ],
+            "contact": {
+                "email": "raghavasthana911@gmail.com"
+            }
+        },
+    {
+        "id": 7,
+            "name": "Shivam Ahuja",
+            "course": "BTech",
+            "branch": "CSE(AIML)",
+            "year": "2nd year",
+            "position": "Machine Learning",
+            "college": "Dronacharya college of Engineering",
+            "achievements": [
+                "I got intership in DataCultures Technologies at the end of 1st year ",
+                ""
+            ],
+            "socialLinks": {
+                "linkedin": "https://www.linkedin.com/in/shivamahujaa",
+                "github": "https://github.com/Shivam9901"
+            },
+            "availableSlots": [
+                "Saturday 11 AM - 1 PM",
+                "Sunday 10 AM - 12 PM"
+            ],
+            "personalProjects": [
+                {
+                    "title": "",
+                    "description": "",
+                    "link": "https://github.com/"
+                }
+            ],
+            "skills": [
+                "Python",
+                "Machine Learning",
+                "React.js",
+                "Kotlin"
+            ],
+            "certifications": [
+                "",
+                ""
+            ],
+            "contact": {
+                "email": "shivamahuja645@gmail.com",
+                "phone": "+91 8920822841"
+            }
+        },
+    {
+        "id": 8,
+        "name": "Mohd Rehaan Ansari ",
+            "course": "MCA",
+            "branch": "DSA",
+            "year": "1st year ",
+            "position": "Full Stack Developer",
+            "college": "Echelon Institute of Technology ",
+            "achievements": [
+                "Best student of the batch (BCA) 2021-24 at Aravali College of Engineering and Management",
+                ""
+            ],
+            "socialLinks": {
+                "linkedin": "https://www.linkedin.com/in/rehaan-ansari?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+                "github": "https://github.com/rehaanansari811"
+            },
+            "availableSlots": [
+                "Tuesday 9 AM - 11 AM",
+                "Friday 3 PM - 5 PM"
+            ],
+            "personalProjects": [
+                {
+                    "title": "",
+                    "description": "",
+                    "link": "https://github.com/"
+                }
+            ],
+            "skills": [
+                "React.js",
+                " Node.js",
+                "JavaScript",
+                "Express.js",
+                "MongoDB",
+                "Nextjs"
+            ],
+            "certifications": [
+                "MongoDB Intro Course href=https://drive.google.com/file/d/1tST-4hKc0cceHbsiqYKtj3NvQrL0vhyi/view?usp=drivesdk",
+                ""
+            ],
+            "contact": {
+                "email": "ansarirehaan811@gmail.com",
+                "phone": "+91 8510927479"
+        }
+    },
+    {
+        "id": 9,
+        "name": "Kumar Gaurav ",
+            "course": "DCA",
+            "branch": "MCA",
+            "year": "2nd year",
+            "position": "Software Test Engineer",
+            "college": "Echelon Institute of Technology",
+            "achievements": [
+                "",
+                ""
+            ],
+            "socialLinks": {
+                "linkedin": "https://www.linkedin.com/in/kumar-gaurav-a86710270",
+                "github": "",
+                "twitter": ""
+            },
+            "availableSlots": [
+                "Saturday 11 AM - 1 PM",
+                "Sunday 10 AM - 12 PM"
+            ],
+            "personalProjects": [
+                {
+                    "title": "",
+                    "description": "",
+                    "link": "https://github.com/"
+                }
+            ],
+            "skills": [
+                "Computer Vision",
+                "C++",
+                "Java",
+                "API",
+                "Agile Model"
+            ],
+            "certifications": [
+                "",
+                ""
+            ],
+            "contact": {
+                "email": "kumargaurav.co.in@gmail.com",
+                "phone": "+91 8860325218"
+        }
+    },
+    {
+        "id": 10,
+        "name": "Sneha Sheoran  ",
+        "course": "B.tech",
+        "branch": "Marketing",
+        "year": "2nd year",
+        "position": "Marketing Intern",
+        "college": "Indian School of Business (ISB)",
+        "achievements": [
+            "Best Marketing Campaign Award",
+            "Top 5 in National Marketing Challenge"
+        ],
+        "socialLinks": {
+            "linkedin": "https://www.linkedin.com/in/varunsharma",
+            "github": "https://github.com/varunsharma",
+            "twitter": "https://twitter.com/varunsharma"
+        },
+        "availableSlots": [
+            "Tuesday 10 AM - 12 PM",
+            "Thursday 3 PM - 5 PM"
+        ],
+        "personalProjects": [
+            {
+                "title": "Digital Marketing Campaign",
+                "description": "A comprehensive digital marketing campaign for a startup.",
+                "link": "https://github.com/varunsharma/digital-marketing-campaign"
+            }
+        ],
+        "skills": [
+            "Digital Marketing",
+            "SEO",
+            "Content Creation",
+            "Analytics"
+        ],
+        "certifications": [
+            "Certified Digital Marketer",
+            "SEO Specialist"
+        ],
+        "contact": {
+            "email": "varun@example.com",
+            "phone": "+91 9876543219"
+        }
+    },
+    {
+        "id": 11,
+        "name": "Sneha Patel",
+        "course": "BSc",
+        "branch": "Chemistry",
+        "year": "3rd year",
+        "position": "Research Assistant",
+        "college": "University of Hyderabad",
+        "achievements": [
+            "Published Research Paper in Organic Chemistry",
+            "Top Performer in Chemistry Lab"
+        ],
+        "socialLinks": {
+            "linkedin": "https://www.linkedin.com/in/sneha-patel",
+            "github": "https://github.com/sneha-patel"
+        },
+        "availableSlots": [
+            "Monday 11 AM - 1 PM",
+            "Wednesday 2 PM - 4 PM"
+        ],
+        "personalProjects": [
+            {
+                "title": "Organic Chemistry Research",
+                "description": "Research project on organic chemistry reactions.",
+                "link": "https://github.com/sneha-patel/organic-chemistry-research"
+            }
+        ],
+        "skills": [
+            "Chemistry",
+            "Research",
+            "Lab Techniques"
+        ],
+        "certifications": [
+            "Certified Research Assistant",
+            "Advanced Chemistry Techniques"
+        ],
+        "contact": {
+            "email": "sneha@example.com",
+            "phone": "+91 9876543220"
+        }
+    },
+    {
+        "id": 12,
+        "name": "Alok Verma",
+        "course": "MTech",
+        "branch": "Computer Science and Engineering",
+        "year": "2nd year",
+        "position": "Software Engineer Intern",
+        "college": "IIT Bombay",
+        "achievements": [
+            "Completed Internship at XYZ Tech",
+            "Top 10 in Coding Contest"
+        ],
+        "socialLinks": {
+            "linkedin": "https://www.linkedin.com/in/alokverma",
+            "github": "https://github.com/alokverma"
+        },
+        "availableSlots": [
+            "Tuesday 10 AM - 12 PM",
+            "Thursday 3 PM - 5 PM"
+        ],
+        "personalProjects": [
+            {
+                "title": "AI Chatbot",
+                "description": "An AI chatbot application built with Python.",
+                "link": "https://github.com/alokverma/ai-chatbot"
+            }
+        ],
+        "skills": [
+            "Python",
+            "Machine Learning",
+            "Data Analysis"
+        ],
+        "certifications": [
+            "Certified Machine Learning Specialist",
+            "Advanced Python Programming"
+        ],
+        "contact": {
+            "email": "alok@example.com",
+            "phone": "+91 9876543221"
+        }
+    },
+    {
+        "id": 13,
+        "name": "Priya Singh",
+        "course": "MBA",
+        "branch": "Finance",
+        "year": "1st year",
+        "position": "Financial Analyst Intern",
+        "college": "Manav Rachna",
+        "achievements": [
+            "Top 5 in Financial Analysis Competition",
+            "Completed Advanced Financial Modelling Course"
+        ],
+        "socialLinks": {
+            "linkedin": "https://www.linkedin.com/in/priyasingh",
+            "github": "https://github.com/priyasingh"
+        },
+        "availableSlots": [
+            "Monday 3 PM - 5 PM",
+            "Thursday 1 PM - 3 PM"
+        ],
+        "personalProjects": [
+            {
+                "title": "Financial Analysis Tool",
+                "description": "A tool for analyzing financial data and trends.",
+                "link": "https://github.com/priyasingh/financial-analysis-tool"
+            }
+        ],
+        "skills": [
+            "Financial Analysis",
+            "Excel",
+            "Data Analysis"
+        ],
+        "certifications": [
+            "Certified Financial Analyst",
+            "Advanced Financial Modelling"
+        ],
+        "contact": {
+            "email": "priya@example.com",
+            "phone": "+91 9876543222"
+        }
+    },
+    {
+        "id": 14,
+        "name": "Rajesh Kumar",
+        "course": "BTech",
+        "branch": "Mechanical Engineering",
+        "year": "3rd year",
+        "position": "Manufacturing Engineer",
+        "college": "IIT Bombay",
+        "achievements": [
+            "Top Performer in Mechanical Design Course",
+            "Winner of Engineering Design Challenge"
+        ],
+        "socialLinks": {
+            "linkedin": "https://www.linkedin.com/in/rajeshkumar",
+            "github": "https://github.com/rajeshkumar"
+        },
+        "availableSlots": [
+            "Tuesday 1 PM - 3 PM",
+            "Thursday 2 PM - 4 PM"
+        ],
+        "personalProjects": [
+            {
+                "title": "Automated Manufacturing System",
+                "description": "A project on automated manufacturing using robotics.",
+                "link": "https://github.com/rajeshkumar/automated-manufacturing-system"
+            }
+        ],
+        "skills": [
+            "Mechanical Design",
+            "Robotics",
+            "CAD Software"
+        ],
+        "certifications": [
+            "Certified Robotics Engineer",
+            "Advanced Mechanical Design"
+        ],
+        "contact": {
+            "email": "rajesh@example.com",
+            "phone": "+91 9876543223"
+        }
+    },
+    {
+        "id": 15,
+        "name": "Rohit Kumar",
+        "course": "BCom",
+        "year": "2nd year",
+        "position": "Business Analyst Intern",
+        "college": "Delhi University",
+        "achievements": [
+            "Top 5 in Business Analytics Competition",
+            "Completed Certification in Business Intelligence"
+        ],
+        "socialLinks": {
+            "linkedin": "https://www.linkedin.com/in/rohitkumar",
+            "github": "https://github.com/rohitkumar"
+        },
+        "availableSlots": [
+            "Monday 10 AM - 12 PM",
+            "Friday 2 PM - 4 PM"
+        ],
+        "personalProjects": [
+            {
+                "title": "Business Analytics Dashboard",
+                "description": "A dashboard for analyzing business metrics.",
+                "link": "https://github.com/rohitkumar/business-analytics-dashboard"
+            }
+        ],
+        "skills": [
+            "Business Analysis",
+            "Data Visualization",
+            "Excel"
+        ],
+        "certifications": [
+            "Certified Business Analyst",
+            "Business Intelligence Certification"
+        ],
+        "contact": {
+            "email": "rohit@example.com",
+            "phone": "+91 9876543224"
+        }
+    }
+]

@@ -1,0 +1,130 @@
+.privacy-page {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.privacy-policy-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 3rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  flex-grow: 1;
+}
+
+.privacy-policy-container h1,h2,h3 {
+     font-family: 'ABeeZee',sans-serif;
+}
+.privacy-policy-container p,li{
+  font-family: 'Poppins',sans-serif;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.breadcrumb-item {
+  color: #007bff;
+  text-decoration: none;
+  margin-right: 0.5rem;
+}
+
+.breadcrumb-separator {
+  margin-right: 0.5rem;
+  color: #555;
+}
+
+.breadcrumb-item.active {
+  color: #6c757d;
+  cursor: default;
+}
+
+.privacy-policy-container h1 {
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #12229d;
+}
+
+.privacy-policy-container h2 {
+  color: #0d6fd7;
+  font-size: 30px;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.privacy-policy-container h3 {
+  color: #0d6fd7;
+  font-size: 28px;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.privacy-policy-container p {
+  font-size: 18px;
+  margin-bottom: 1.5rem;
+  color: #333;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.privacy-policy-container ul {
+  list-style: disc outside;
+  margin-left: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.privacy-policy-container ul li {
+  font-size: 18px;
+  margin-bottom: 1rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+.highlights {
+  background-color: #f0f4f8;
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 3rem 0;
+  border-left: 5px solid #0d6fd7;
+}
+
+.highlights h3 {
+  color: #0d6fd7;
+  margin-top: 0;
+}
+
+#dark .privacy-page {
+  background-color: #000;
+}
+
+#dark .privacy-policy-container {
+  background-color: #000;
+}
+
+#dark .privacy-policy-container p,
+#dark .privacy-policy-container li {
+  color: #fff;
+}
+
+#dark .privacy-policy-container h2,h3 {
+  color: #60a4ee;
+}
+
+#dark .privacy-policy-container h1 {
+  color: #12229d;
+}
+
+#dark .highlights {
+  background-color: #000;
+  border-left-color: #4491e4;
+}
