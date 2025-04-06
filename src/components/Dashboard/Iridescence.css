@@ -11,15 +11,22 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-/* Container to center content */
+/* Container with modern design and vintage purple background */
 .iridescence-container {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 2rem;
+  backdrop-filter: blur(1000px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 200px; /* More modern, less extreme radius */
+
+  border: 1px solid rgba(255, 255, 255, 0.18); /* Glass-like border */
+  transition: all 0.3s ease; /* Smooth transitions for interactions */
 }
+
+/* Optional hover effect for added modern interactivity */
 
 /* Main Content Box */
 .demo {
@@ -30,6 +37,7 @@ body {
   padding: 2rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   text-align: center;
+  
 }
 
 /* Heading */

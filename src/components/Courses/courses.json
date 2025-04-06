@@ -6,7 +6,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/computer-science.webp",
     "instructor": "John Doe",
     "duration": "10 weeks",
-    "price": "$300"
+    "price": " Rs.300"
   },
   {
     "id": 2,
@@ -15,7 +15,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/dsa.png",
     "instructor": "Jane Smith",
     "duration": "12 weeks",
-    "price": "$400"
+    "price": " Rs.400"
   },
   {
     "id": 3,
@@ -24,7 +24,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/web-dev.jpg",
     "instructor": "Emily Johnson",
     "duration": "14 weeks",
-    "price": "$500"
+    "price": " Rs.500"
   },
   {
     "id": 4,
@@ -33,7 +33,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/data.jpg",
     "instructor": "Aasta Deniz",
     "duration": "14 weeks",
-    "price": "$600"
+    "price": " Rs.600"
   },
   {
     "id": 5,
@@ -42,7 +42,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/java.png",
     "instructor": "Towino Thomas",
     "duration": "24 weeks",
-    "price": "$800"
+    "price": " Rs.800"
   },
   {
     "id": 6,
@@ -51,7 +51,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/mern.jpg",
     "instructor": "Hana Motana",
     "duration": "16 weeks",
-    "price": "$600"
+    "price": " Rs.600"
   },
   {
     "id": 7,
@@ -60,7 +60,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/flutter.jpg",
     "instructor": "Emely Jenner",
     "duration": "12 weeks",
-    "price": "$500"
+    "price": " Rs.500"
   },
   {
     "id": 8,
@@ -69,7 +69,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/ai.jpg",
     "instructor": "Martin Joseph",
     "duration": "12 weeks",
-    "price": "$600"
+    "price": " Rs.600"
   },
   {
     "id": 9,
@@ -78,7 +78,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/ml.jpg",
     "instructor": "Berk Aten",
     "duration": "12 weeks",
-    "price": "$500"
+    "price": " Rs.500"
   },
   {
     "id": 10,
@@ -87,7 +87,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/aws.png",
     "instructor": "Justin Park",
     "duration": "8 weeks",
-    "price": "$400"
+    "price": " Rs.400"
   },
   {
     "id": 11,
@@ -96,7 +96,7 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/oracle.jpg",
     "instructor": "Mark Finix",
     "duration": "6 weeks",
-    "price": "$300"
+    "price": " Rs.300"
   },
   {
     "id": 12,
@@ -105,6 +105,6 @@
     "image": "https://raw.githubusercontent.com/Counselllor/Counsellor-Web/master/src/assets/python.png",
     "instructor": "Max Tenison",
     "duration": "16 weeks",
-    "price": "$600"
+    "price": " Rs.600"
   }
 ]

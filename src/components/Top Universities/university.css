@@ -1,502 +1,445 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --color-primary: #12229d;
-  --color-primary2: #4454ce;
-  --color-background: #cae7fe;
-  --color-item: #76c6f5;
-  --color-text: #333;
-  --color-text-light: #fff;
+  /* Light mode colors - refreshed with modern palette */
+  --color-primary: #2563eb;
+  --color-primary-dark: #1e40af;
+  --color-primary-light: #3b82f6;
+  --color-secondary: #10b981;
+  --color-accent: #f59e0b;
+  --color-background: #f8fafc;
+  --color-card: #ffffff;
+  --color-text: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-text-light: #ffffff;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-shadow: rgba(0, 0, 0, 0.08);
+  --color-skeleton: #e2e8f0;
+  --color-skeleton-highlight: #f1f5f9;
+  --card-hover-bg: #f1f5f9;
+  --transition-speed: 0.3s;
 }
 
+/* Dark mode colors - more modern dark theme */
+[data-theme="dark"] .universityPage,
+#dark .universityPage {
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-primary-light: #60a5fa;
+  --color-secondary: #10b981;
+  --color-accent: #f59e0b;
+  --color-background: #0f172a;
+  --color-card: #1e293b;
+  --color-text: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-light: #ffffff;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-shadow: rgba(0, 0, 0, 0.25);
+  --color-skeleton: #334155;
+  --color-skeleton-highlight: #475569;
+  --card-hover-bg: #273549;
+}
+
+/* Base styles */
 .universityPage {
   background-color: var(--color-background);
   font-family: 'Poppins', sans-serif;
   color: var(--color-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color var(--transition-speed) ease;
 }
-#dark .universityPage{
-  background-color: #1f1f1f;
-}
+
+/* Header styles - modernized with gradients and shapes */
 .universityPage-header {
-  background: linear-gradient(135deg, var(--color-primary2), var(--color-item));
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   color: var(--color-text-light);
   text-align: center;
-  padding: 6rem 2rem;
+  padding: 8rem 2rem 10rem;
   clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-}
-#dark .universityPage-header{
-  background: linear-gradient(135deg, rgb(0, 0, 0), rgb(10, 10, 10));
+  position: relative;
+  box-shadow: 0 4px 20px var(--color-shadow);
+  transition: all var(--transition-speed) ease;
+  margin-bottom: 50px;
 }
 
 .universityPage-main-title {
-  font-family: 'ABeeZee',sans-serif;
-/*   color: var(--color-primary); */
-  font-size: 4rem;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: 700;
-  margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+  background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0.8));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .universityPage-subtitle {
-  font-size: 1.5rem;
-  font-family: 'ABeeZee',sans-serif !important;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
   font-weight: 300;
   opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto 2rem;
 }
 
+/* Theme toggle button */
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
 
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Content styles - more breathing room */
 .universityPage-content {
-  padding: 6rem 2rem;
+  padding: 4rem 2rem 8rem;
+  margin-top: -6rem;
+  flex: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .universityPage-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2.5rem;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
-#dark .universityPage-card{
-  border: white solid 2px;
-    box-shadow: 0px 0px 10px white;
-    background-color: #151414;
-}
 
+/* Card styles - modern glass effect */
 .universityPage-card {
-  background-color: var(--color-text-light);
-  border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem;
-  font-family: 'Poppins',sans-serif !important;
+  background-color: var(--color-card);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px var(--color-shadow);
+  padding: 0;
   text-align: center;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition: all var(--transition-speed) cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(5px);
 }
 
 .universityPage-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-12px);
+  box-shadow: 0 25px 50px var(--color-shadow);
+  background-color: var(--card-hover-bg);
 }
 
-.universityPage-title {
-  color: var(--color-primary);
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin-bottom: 1.25rem;
-}
-#dark .universityPage-title {
-  color: #ffffff;
+.universityPage-image-container {
+  margin-bottom: 0;
+  overflow: hidden;
+  height: 200px;
+  position: relative;
 }
 
-.universityPage-company {
-  color: var(--color-item);
-  font-family: 'Poppins',sans-serif !important;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-#dark .universityPage-company {
-  color: #7a7a7a ;
-}
-#dark .universityPage-company a{
-  color: #ffffff !important;
-}
-
-.universityPage-description,
-.universityPage-location,
-.universityPage-type {
-  color: var(--color-text);
-  font-family: 'Poppins',sans-serif !important;
-  font-size: 1.3rem;
-  line-height: 1.6;
-  margin-bottom: 1rem;
-}
-
-.universityPage-apply {
-  background-color: var(--color-primary);
-  color: var(--color-text-light);
-  font-size: 1.1rem;
-  font-family: 'Poppins',sans-serif !important;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.universityPage-apply:hover {
-  background-color: var(--color-item);
-}
-
-@media (max-width: 1200px) {
-  .universityPage-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .universityPage-header {
-    padding: 4rem 1rem;
-  }
-
-  .universityPage-main-title {
-    font-size: 3rem;
-  }
-
-  .universityPage-subtitle {
-    font-size: 1.2rem;
-  }
-
-  .universityPage-content {
-    padding: 4rem 1rem;
-  }
-
-  .universityPage-list {
-    grid-template-columns: 1fr;
-  }
-
-  .universityPage-card {
-    padding: 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .universityPage-main-title {
-    font-size: 2.5rem;
-  }
-
-  .universityPage-subtitle {
-    font-size: 1rem;
-  }
-
-  .universityPage-title {
-    font-size: 1.5rem;
-  }
-}
-
-
-.giving0-colro{
-    background: white ;
-}
-#dark .giving0-colro{
-    background-color: #121212 !important;
-}
-/* .modal-Paths{
-  width: 100vw;
-  height: 100vh;
-  position: fixed !important;
-  top: 0px !important;
-  overflow: scroll;
-  z-index: 0;
-  left: 0px !important;
-} */
-.Paths-container{
-  max-width: 500px;
-  width:100%;
-  margin: auto ;
-  padding-top: 20px;
-  padding-bottom: 20px !important;
-  z-index: 1000;
-
-}
-.modal-Paths {
-  position: fixed;
-  width: 50vw;
-  left: 30%;
-  top: 70px !important;
-  height: 90vh;
-    max-width: 600px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  padding: 20px;
-}
-@media only screen and (max-width:900px){
-  .modal-Paths{
-    left: 20%;
-    width: 80vw;
-  }
-}
-@media only screen and (max-width:600px){
-  .modal-Paths{
-    left: 20px;
-    width: 90vw;
-  }
-}
-.blackb{
-  background-color: black;
-  opacity: 0.6;
-  height: 100vh;
-  width: 100vw;
-  z-index: 0;
-  position: fixed;
+.universityPage-image-container::after {
+  content: '';
+  position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.5));
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
 }
 
-
-.Paths-container h1 {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.modal-form .form-group {
-  margin-bottom: 20px;
-}
-
-.modal-form .form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.modal-form .form-group input,
-.modal-form .form-group textarea {
-  width: 90%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.modal-form .form-group textarea {
-  resize: vertical;
-  height: 100px;
-}
-
-.submit-button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-}
-.form-group{
-  width: 105% !important;
-}
-.form-group input.form-group div{
-  width: 105% !important;
-}
-.submit-button:hover {
-  background-color: #0056b3;
-}
-.universityPage-card {
-  background-color: var(--color-text-light);
-  border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem;
-  text-align: center;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+.universityPage-card:hover .universityPage-image-container::after {
+  opacity: 0.7;
 }
 
 .universityPage-image {
   width: 100%;
-  height: auto;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-}
-
-.universityPage-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-}
-.universityPage-card img {
-  height: 200px;
-  width: 280px;
+  height: 100%;
   object-fit: cover;
-  display: block;
-  margin: 0 auto;
-  margin-bottom: 10px;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-
-
-
-
-
-
-
-
-
-.universityPage-card {
-  background-color: var(--color-text-light);
-  border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem;
-  text-align: center;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+.universityPage-card:hover .universityPage-image {
+  transform: scale(1.1);
 }
 
-.universityPage-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-  background-color: #92c0ee;
+.universityPage-title {
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.5rem 1.5rem 0.75rem;
+  padding: 0 0.5rem;
+  transition: color var(--transition-speed) ease;
+  position: relative;
 }
 
-#dark .universityPage-card:hover{
-  background-color: rgb(70, 69, 69) !important;
+.universityPage-title::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 3px;
+  background: var(--color-primary);
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
 }
 
-.universityPage-title,
-.universityPage-company,
-.universityPage-description,
+.universityPage-card:hover .universityPage-title::after {
+  width: 60px;
+}
+
+.universityPage-company {
+  font-size: 1rem;
+  margin: 1.5rem 1.5rem 1rem;
+  font-weight: 400;
+  padding: 0 1rem;
+}
+
+.universityPage-link {
+  color: var(--color-primary-light);
+  text-decoration: none;
+  transition: all var(--transition-speed) ease;
+  word-break: break-all;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.universityPage-link:hover {
+  color: var(--color-primary);
+}
+
+.universityPage-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.universityPage-link:hover::after {
+  width: 100%;
+}
+
+.universityPage-stats,
 .universityPage-location {
-  transition: color 0.3s ease-in-out;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0.75rem 1.5rem;
+  color: var(--color-text-secondary);
+  padding: 0 1rem;
 }
 
-.universityPage-card:hover .universityPage-title,
-.universityPage-card:hover .universityPage-company,
-.universityPage-card:hover .universityPage-description,
-.universityPage-card:hover .universityPage-location {
-  color: black;
+.universityPage-location {
+  margin-bottom: 1.5rem;
 }
 
+.universityPage-stats-label,
+.universityPage-location-label {
+  font-weight: 600;
+  margin-right: 0.5rem;
+  color: var(--color-text);
+  position: relative;
+}
+
+.universityPage-stats-label::before,
+.universityPage-location-label::before {
+  content: '•';
+  color: var(--color-primary);
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+/* Skeleton loading styles - improved animation */
+.skeleton-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+.skeleton-img,
+.skeleton-title,
+.skeleton-company,
+.skeleton-description,
+.skeleton-location {
+  background-color: var(--color-skeleton);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-img {
+  height: 200px;
+  border-radius: 12px;
+  margin-top: 0;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
+  width: calc(100% + 3rem);
+}
+
+.skeleton-title {
+  height: 28px;
+  width: 70%;
+  margin: 1.5rem auto 1rem;
+}
+
+.skeleton-company {
+  height: 20px;
+  width: 85%;
+  margin: 0.75rem auto;
+}
+
+.skeleton-description,
+.skeleton-location {
+  height: 16px;
+  width: 60%;
+  margin: 0.75rem auto;
+}
+
+.skeleton-img::after,
+.skeleton-title::after,
+.skeleton-company::after,
+.skeleton-description::after,
+.skeleton-location::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-skeleton-highlight),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Cool animations for cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+/* Floating animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Responsive styles */
 @media (max-width: 1200px) {
   .universityPage-list {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    padding: 0 1rem;
   }
 }
 
 @media (max-width: 768px) {
   .universityPage-header {
-    padding: 4rem 1rem;
+    padding: 6rem 1.5rem 8rem;
   }
-
-  .universityPage-main-title {
-    font-size: 3rem;
-  }
-
-  .universityPage-subtitle {
-    font-size: 1.2rem;
-  }
-
+  
   .universityPage-content {
-    padding: 4rem 1rem;
+    padding: 3rem 1.5rem;
+    margin-top: -5rem;
   }
-
+  
   .universityPage-list {
-    grid-template-columns: 1fr;
-  }
-
-  .universityPage-card {
-    padding: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .universityPage-main-title {
-    font-size: 2.5rem;
+  .universityPage-header {
+    padding: 4rem 1rem 6rem;
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
   }
-
-  .universityPage-subtitle {
-    font-size: 1rem;
+  
+  .universityPage-content {
+    padding: 2rem 1rem;
+    margin-top: -4rem;
   }
-
-  .universityPage-title {
-    font-size: 1.5rem;
-  }
-}
-/* Skeleton styles */
-.universityPage-list .skeleton-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
-  width: 100%;
-}
-
-.universityPage-list .skeleton-card {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  width: calc(33.333% - 20px); /* Adjust this to match your card width */
-  width: 100%;
-}
-
-.universityPage-list .skeleton-img {
-  width: 100%;
-  height: 150px;
-  background-color: #e0e0e0;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  animation: pulse 1.5s infinite;
-}
-
-.universityPage-list .skeleton-title,
-.universityPage-list .skeleton-company,
-.universityPage-list .skeleton-description,
-.universityPage-list .skeleton-location {
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  animation: pulse 1.5s infinite;
-}
-
-.universityPage-list .skeleton-title {
-  width: 60%;
-  height: 20px;
-}
-
-.universityPage-list .skeleton-company {
-  width: 100%;
-  height: 16px;
-}
-
-.universityPage-list .skeleton-description {
-  width: 100%;
-  height: 16px;
-}
-
-.universityPage-list .skeleton-location {
-  width: 70%;
-  height: 16px;
-}
-
-@keyframes pulse {
-  0% {
-    background-color: #e4e3e3;
-  }
-  50% {
-    background-color: #d1c9c9;
-  }
-  100% {
-    background-color: #e4e3e3;
+  
+  .universityPage-list {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
-  .skeleton-card {
-    width: 100%; /* Full width for each card */
+/* Accessibility improvements */
+@media (prefers-reduced-motion) {
+  .universityPage-card,
+  .universityPage-card:hover,
+  .universityPage-image,
+  .skeleton-img::after,
+  .skeleton-title::after,
+  .skeleton-company::after,
+  .skeleton-description::after,
+  .skeleton-location::after {
+    transition: none;
+    animation: none;
+    transform: none;
   }
-}
-
-/* Dark mode */
-#dark .universityPage-list .skeleton-card {
-  background-color: #000000;
-}
-
-#dark .universityPage-list .skeleton-img,
-#dark .universityPage-list .skeleton-title,
-#dark .universityPage-list .skeleton-company,
-#dark .universityPage-list .skeleton-description,
-#dark .universityPage-list .skeleton-location {
-  animation: skeleton-animation-dark 1.5s infinite ease-in-out;
-}
-
-@keyframes skeleton-animation-dark {
-  0% {
-    background-color: #524e4e;
-  }
-  50% {
-    background-color: #282727;
-  }
-  100% {
-    background-color: #524e4e;
+  
+  .universityPage-title::after,
+  .universityPage-link::after {
+    transition: none;
   }
 }

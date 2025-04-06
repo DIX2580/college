@@ -26,9 +26,7 @@ import Blogs from "./components/blogs/Blogs";
 import CareerSupport from "./components/Career Support/CareerSupport";
 import Paths from "./components/Paths/Paths";
 import BlogWrite from "./components/blogs/Blogswrite";
-import BlogReadPage from "./components/blogs/BlogReadPage";
 import University from "./components/Top Universities/University";
-import BlogEditPage from "./components/blogs/BlogEditPage";
 import StudentLayout from "./components/Student/StudentLayout";
 import Achievements from "./components/Student/Achievements";
 import StudentDefault from "./components/Student/StudentDefault";
@@ -173,16 +171,8 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         element: <BlogWrite />,
       },
-      {
-        path: "/blogs/:id",
-        errorElement: <ErrorPage />,
-        element: <BlogReadPage />,
-      },
-      {
-        path: "/blogs/edit/:id",
-        errorElement: <ErrorPage />,
-        element: <BlogEditPage />,
-      },
+     
+    
     ],
   },
 ]);

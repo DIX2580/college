@@ -345,3 +345,22 @@ body {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+/* Add this to your Blogs.css file */
+
+/* Ensure Tidio chat appears above all other elements */
+#tidio-chat iframe,
+.tidio-chat-iframe {
+  z-index: 9999 !important;
+}
+
+/* Optional: This gives the chat a more fullscreen feel */
+@media (max-width: 768px) {
+  #tidio-chat iframe,
+  .tidio-chat-iframe {
+    width: 100% !important;
+    height: 100% !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    border-radius: 0 !important;
+  }
+}

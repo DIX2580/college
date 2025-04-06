@@ -4,6 +4,7 @@ import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import CareerRoadmap from "./CareerRoadmap";
 import pathsData from "./Paths.json";
+import AnimatedBackground from "./AnimatedBackground";
 
 const Paths = () => {
   // State to control animation
@@ -17,10 +18,20 @@ const Paths = () => {
 
   // Fetch user data from localStorage on component mount
   useEffect(() => {
-    const storedData = localStorage.getItem('userCareerData');
-    if (storedData) {
-      setUserData(JSON.parse(storedData));
-    }
+    // Fetch user data from localStorage
+    const fetchUserData = () => {
+      try {
+        const storedData = localStorage.getItem('userCareerData');
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          setUserData(parsedData);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
     
     // Simulate loading for smoother animation
     setTimeout(() => {
@@ -56,6 +67,8 @@ const Paths = () => {
 
   return (
     <>
+            <AnimatedBackground>
+
       <div className="PathsPage">
         <Navbar />
         
@@ -74,7 +87,7 @@ const Paths = () => {
             <p>Loading your career data...</p>
           </div>
         ) : showRoadmap ? (
-          // Display the career roadmap
+          // Display the career roadmap with filtered steps based on current class
           <CareerRoadmap 
             pathsData={pathsData} 
             currentClass={userData?.currentClass} 
@@ -129,7 +142,10 @@ const Paths = () => {
           </div>
         )}
       </div>
+      
+      </AnimatedBackground>
       <Footer />
+
     </>
   );
 };

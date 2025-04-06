@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import Iridescence from "./Iridescence"; // Make sure this path is correct
+import AnimatedBackground from "../Paths/AnimatedBackground";
 
 const slideToCenter = {
   hidden: { x: 150, opacity: 0 },
@@ -100,6 +101,7 @@ const Dashboard = () => {
     <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
     <div className="flex-grow flex flex-col items-center justify-center relative text-center">
       <div>
+        
 
         
       </div>
@@ -110,7 +112,7 @@ const Dashboard = () => {
           maxWidth: "1000px",     // Maximum size for larger screens
           height: "400px",       
           maxHeight: "400px",    // Maintain aspect ratio in bigger screens
-          borderRadius: "20px",  // Rounded corners
+          borderRadius: "200px",  // Rounded corners
           border: "10px solid white", // White stroke
         }}
       >
