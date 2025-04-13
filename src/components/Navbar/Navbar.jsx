@@ -234,7 +234,7 @@ const DesktopMenu = ({ user, handleSignOut }) => {
           </motion.div>
         </>
       ) : (
-        <NavItem href="/logout" name="Login" delay={menuItems.length * 0.05} />
+        <NavItem href="/" name="Login" delay={menuItems.length * 0.05} />
       )}
     </div>
   );

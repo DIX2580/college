@@ -278,17 +278,25 @@ const CareerRoadmap = ({ pathsData, currentClass, dreamJob, onBackClick }) => {
                       </div>
                     )}
                   </React.Fragment>
+                  
                 ))}
               </div>
             </div>
           ))}
+          
         </div>
+        
       ) : (
         <div className="no-paths-message">
           <p>No career paths found for {dreamJob} starting from {currentClass}. Please try a different combination.</p>
         </div>
+        
       )}
     </div>
+    <button onClick={onBackClick} className="PathsPage-apply">
+        Go Back
+      </button>
+      
     </div>
   );
 };

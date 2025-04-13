@@ -21,7 +21,7 @@ export default function Iridescence() {
 
   const classOptions = ["5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th","B.Tech","Bsc","BE","BCA","BA","BFA","B.Des","BJMC",
     "BBA","Bcom","BMS","MBBS","BDS","BPharma","BPT","BSC Nursing","LLB","BSW","Diploma","Foreign Engineering Degree","BHM","BTTM",];
-  const sectorOptions = ["Private Sector", "Public Sector", "Other", "Don't Know"];
+  const sectorOptions = ["Private Sector", "Public Sector", "Don't Know"];
   
   const privatePaths = [
    "DevOps Engineering",
@@ -264,7 +264,24 @@ export default function Iridescence() {
     setDreamJob('');
     setSearchQuery('');
     setFilteredPaths([]);
-    setStep(3);
+    
+    // Redirect to livechat if "Don't Know" is selected
+    if (sector === "Don't Know") {
+      // Store the current class in localStorage before redirecting
+      const userData = {
+        currentClass: selectedClass,
+        sector: sector,
+        dreamJob: ""
+      };
+      
+      localStorage.setItem('userCareerData', JSON.stringify(userData));
+      
+      // Navigate to livechat page
+      navigate('/livechat');
+    } else {
+      // Continue with normal flow
+      setStep(3);
+    }
   };
 
   const handleSubmitDreamJob = () => {
@@ -322,7 +339,7 @@ export default function Iridescence() {
     </div>
     
     <button 
-      className={`cancel hover:bg-green-600 text-white sector py-2 px-6 rounded-lg ${!selectedClass ? 'opacity-50 cursor-not-allowed' : ''}`} 
+      className={`cancel hover:bg-green-600 text-white submit-button py-2 px-6 rounded-lg ${!selectedClass ? 'cursor-not-allowed' : ''}`} 
       onClick={() => setStep(2)}
       disabled={!selectedClass}
     >
@@ -339,7 +356,7 @@ export default function Iridescence() {
         </button>
       ))}
     </div>
-    <button className="bg-gray-200 hover:bg-gray-300 py-2 px-6 rounded-md mt-4" onClick={() => setStep(1)}>
+    <button className="bg-gray-200 hover:bg-gray-300 py-2 px-6 rounded-md mt-4 back-btn" onClick={() => setStep(1)}>
       Back
     </button>
   </>
@@ -377,13 +394,13 @@ export default function Iridescence() {
             </div>
 
             <button 
-              className={`cancel hover:bg-green-600 text-white sector py-2 px-6 rounded-lg mt-4 ${!dreamJob && !searchQuery ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`cancel hover:bg-green-600 text-white submit-button py-2 px-6 rounded-lg mt-4 ${!dreamJob && !searchQuery ? 'opacity-50 cursor-not-allowed' : ''}`}
               onClick={handleSubmitDreamJob}
               disabled={!dreamJob && !searchQuery}
             >
               Submit
             </button>
-            <button className="bg-gray-200 hover:bg-gray-300 py-2 px-6 rounded-md mt-2" onClick={() => setStep(2)}>
+            <button className="bg-gray-200 back-btn hover:bg-gray-300 py-2 px-6 rounded-md mt-2" onClick={() => setStep(2)}>
               Back
             </button>
           </>
@@ -392,27 +409,27 @@ export default function Iridescence() {
             <h2 className="boxcurrentclass text-black text-2xl font-bold bg-blue-500">Submitted details :-</h2>
             
             <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-              <div className="career-summary-box">
-                <div className="summary-content">
-                  <h3 className="field-label">Current Class:</h3>
-                  <div className="value-container">
-                    <p className="field-value">{selectedClass}</p>
-                  </div>
-                  
-                  <h3 className="field-label">Preferred Sector:</h3>
-                  <div className="value-container">
-                    <p className="field-value">{selectedSector}</p>
-                  </div>
-                  
-                  <h3 className="field-label">Dream Job:</h3>
-                  <div className="value-container">
-                    <p className="field-value">{dreamJob || searchQuery}</p>
-                  </div>
-                </div>
-              </div>
+            <div className="career-profile-container">                 
+  <div className="career-profile-content">                   
+    <h3 className="career-label">Current Class:</h3>                   
+    <div className="career-value-wrapper">                     
+      <p className="career-data-text">{selectedClass}</p>                   
+    </div>                                      
+    
+    <h3 className="career-label">Preferred Sector:</h3>                   
+    <div className="career-value-wrapper">                     
+      <p className="career-data-text">{selectedSector}</p>                   
+    </div>                                      
+    
+    <h3 className="career-label">Dream Job:</h3>                   
+    <div className="career-value-wrapper">                     
+      <p className="career-data-text">{dreamJob || searchQuery}</p>                   
+    </div>                 
+  </div>               
+</div>
               
               <button 
-                className={`w-full bg-blue-500 hover:bg-blue-600 text-white sector py-3 px-6 rounded-lg font-bold text-lg ${
+                className={`w-full bg-blue-500 hover:bg-blue-600 text-white see-path-btn py-3 px-6 rounded-lg font-bold text-lg ${
                   !selectedClass || !selectedSector || (!dreamJob && !searchQuery) ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
                 onClick={handleSeePathsClick}
@@ -421,7 +438,7 @@ export default function Iridescence() {
               </button> 
             </div>
             
-            <button className="bg-gray-200 hover:bg-gray-300 py-2 px-6 rounded-md mt-4" onClick={() => setStep(3)}>
+            <button className="back-btn" onClick={() => setStep(3)}>
               Back
             </button>
           </>

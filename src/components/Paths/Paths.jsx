@@ -67,85 +67,82 @@ const Paths = () => {
 
   return (
     <>
-            <AnimatedBackground>
-
-      <div className="PathsPage">
-        <Navbar />
-        
-        <header className="PathsPage-header">
-          <h1 className="PathsPage-main-title">Your Career Path</h1>
-          <p className="PathsPage-subtitle">
-            Discover your journey from{" "}
-            <span className="highlight">{userData?.currentClass || "education"}</span> to{" "}
-            <span className="highlight">{userData?.dreamJob || "dream career"}</span>
-          </p>
-        </header>
-        
-        {isLoading ? (
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
-            <p>Loading your career data...</p>
-          </div>
-        ) : showRoadmap ? (
-          // Display the career roadmap with filtered steps based on current class
-          <CareerRoadmap 
-            pathsData={pathsData} 
-            currentClass={userData?.currentClass} 
-            dreamJob={userData?.dreamJob} 
-            onBackClick={handleBackClick}
-          />
-        ) : (
-          // Display the form summary
-          <div className="flow-chart-container">
-            {/* Current class box */}
-            <div className={`flow-chart-box current-class ${animate ? 'animate-in' : ''}`}>
-              <h3>Current Class</h3>
-              <p>{userData?.currentClass || "Not specified"}</p>
+      <AnimatedBackground>
+        <div className="PathsPage">
+          <Navbar />
+          
+          <header className="PathsPage-header">
+            <h1 className="PathsPage-main-title">Your Career Path</h1>
+            <p className="PathsPage-subtitle">
+              Discover your journey from{" "}
+              <span className="highlight">{userData?.currentClass || "education"}</span> to{" "}
+              <span className="highlight">{userData?.dreamJob || "dream career"}</span>
+            </p>
+          </header>
+          
+          {isLoading ? (
+            <div className="loading-container">
+              <div className="loading-spinner"></div>
+              <p>Loading your career data...</p>
             </div>
-            
-            {/* Animated arrow connecting the boxes */}
-            <div className={`flow-chart-arrow ${animate ? 'animate-in' : ''}`} style={{ transitionDelay: '0.2s' }}>
-              <svg width="40" height="80" viewBox="0 0 40 80">
-                <path d="M20 0 L20 60 L10 50 L20 70 L30 50 L20 60" stroke="#333" fill="none" strokeWidth="2" />
-              </svg>
+          ) : showRoadmap ? (
+            // Display the career roadmap with filtered steps based on current class
+            <CareerRoadmap 
+              pathsData={pathsData} 
+              currentClass={userData?.currentClass} 
+              dreamJob={userData?.dreamJob} 
+              onBackClick={handleBackClick}
+            />
+          ) : (
+            // Display the form summary
+            <div className="flow-chart-container">
+              {/* Current class box */}
+              <div className={`flow-chart-box current-class ${animate ? 'animate-in' : ''}`}>
+                <h3>Current Class</h3>
+                <p>{userData?.currentClass || "Not specified"}</p>
+              </div>
+              
+              {/* Animated arrow connecting the boxes */}
+              <div className={`flow-chart-arrow ${animate ? 'animate-in' : ''}`} style={{ transitionDelay: '0.2s' }}>
+                <svg width="40" height="80" viewBox="0 0 40 80">
+                  <path d="M20 0 L20 60 L10 50 L20 70 L30 50 L20 60" stroke="#f0f0f0" fill="none" strokeWidth="2" />
+                </svg>
+              </div>
+              
+              {/* Sector box */}
+              <div className={`flow-chart-box goal-field ${animate ? 'animate-in' : ''}`} style={{ transitionDelay: '0.4s' }}>
+                <h3>Preferred Sector</h3>
+                <p>{userData?.sector || "Not specified"}</p>
+              </div>
+              
+              {/* Animated arrow connecting the boxes */}
+              <div className={`flow-chart-arrow ${animate ? 'animate-in' : ''}`} style={{ transitionDelay: '0.6s' }}>
+                <svg width="40" height="80" viewBox="0 0 40 80">
+                  <path d="M20 0 L20 60 L10 50 L20 70 L30 50 L20 60" stroke="#f0f0f0" fill="none" strokeWidth="2" />
+                </svg>
+              </div>
+              
+              {/* Dream job box */}
+              <div className={`flow-chart-box goal-field ${animate ? 'animate-in' : ''}`} style={{ transitionDelay: '0.8s' }}>
+                <h3>Dream Job</h3>
+                <p>{userData?.dreamJob || "Not specified"}</p>
+              </div>
+              
+              {/* Button to see paths */}
+              <div className="button-container">
+                <button 
+                  className="PathsPage-apply"
+                  onClick={handleSeePathsClick}
+                  disabled={!userData}
+                >
+                  See Available Paths
+                </button>
+              </div>
             </div>
-            
-            {/* Sector box */}
-            <div className={`flow-chart-box goal-field ${animate ? 'animate-in' : ''}`} style={{ transitionDelay: '0.4s' }}>
-              <h3>Preferred Sector</h3>
-              <p>{userData?.sector || "Not specified"}</p>
-            </div>
-            
-            {/* Animated arrow connecting the boxes */}
-            <div className={`flow-chart-arrow ${animate ? 'animate-in' : ''}`} style={{ transitionDelay: '0.6s' }}>
-              <svg width="40" height="80" viewBox="0 0 40 80">
-                <path d="M20 0 L20 60 L10 50 L20 70 L30 50 L20 60" stroke="#333" fill="none" strokeWidth="2" />
-              </svg>
-            </div>
-            
-            {/* Dream job box */}
-            <div className={`flow-chart-box goal-field ${animate ? 'animate-in' : ''}`} style={{ transitionDelay: '0.8s' }}>
-              <h3>Dream Job</h3>
-              <p>{userData?.dreamJob || "Not specified"}</p>
-            </div>
-            
-            {/* Button to see paths */}
-            <div className="button-container">
-              <button 
-                className="PathsPage-apply"
-                onClick={handleSeePathsClick}
-                disabled={!userData}
-              >
-                See Available Paths
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-      
+          )}
+        </div>
       </AnimatedBackground>
       <Footer />
-
     </>
   );
 };

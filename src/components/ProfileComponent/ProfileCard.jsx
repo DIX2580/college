@@ -18,10 +18,10 @@ import { auth } from "../../firebase/auth";
 import { useSelector } from "react-redux";
 import { compressAndResizeImage } from "../../common/compressAndResizeImage";
 
-const ProfileCard = ({open}) => {
+const ProfileCard = ({ open }) => {
   const [dates, setDates] = useState([]);
   // user info from redux store
-  const userInfo = useSelector((state) => state.isAuthenticate.user);
+  const userInfo = useSelector((state) => state.isAuthenticate?.user) || {};
   const [name, setName] = useState(localStorage.getItem("name") || "Alex Foam");
   const [dob, setDob] = useState(localStorage.getItem("dob") || "2000-01-21");
   const [academicYear, setAcademicYear] = useState(
@@ -38,13 +38,14 @@ const ProfileCard = ({open}) => {
   const [resumeFile, setResumeFile] = useState(
     localStorage.getItem("resumeFile") || null
   );
-  const [userData, setUserData] = useState("");
+  const [userData, setUserData] = useState({});
   const [profilePic, setProfilePic] = useState(null);
   const [userUid, setUserUid] = useState(localStorage.getItem("userUid"));
- const handleSave = async () => {
+  
+  const handleSave = async () => {
     const userRef = ref(database, `users/${userUid}`);
     const updates = {
-      firstname: name.split(" ")[0],
+      firstname: name.split(" ")[0] || "",
       surname: name.split(" ")[1] || "",
       dob,
       academicYear,
@@ -75,29 +76,57 @@ const ProfileCard = ({open}) => {
       console.error("Error saving user data:", error);
     }
   };
- 
 
-  console.log(userData);
   useEffect(() => {
     const fetchData = async () => {
-      const userData = await fetchUserData(userUid);
-      if (userData) {
-        setUserData(userData);
-        setName(userData.firstname + " " + userData.surname || "Alex Foam");
-        setDob(userData.dob || "2000-01-21");
-        if (userData.profilePic) {
-          setProfilePic(userData.profilePic);
+      if (!userUid) {
+        console.error("No user UID found");
+        return;
+      }
+      
+      try {
+        const userData = await fetchUserData(userUid);
+        if (userData) {
+          setUserData(userData);
+          // Update state with user data
+          setName(
+            (userData.firstname || "") + " " + (userData.surname || "")
+          );
+          setDob(userData.dob || "2000-01-21");
+          setAcademicYear(userData.academicYear || "3rd Year");
+          
+          // Handle skills
+          if (userData.skills) {
+            try {
+              // First try to parse if it's already a JSON string
+              const skillsArray = typeof userData.skills === 'string' ? 
+                userData.skills.split(',') : 
+                userData.skills;
+              setSelectedSkills(skillsArray);
+            } catch (e) {
+              console.error("Error parsing skills:", e);
+              setSelectedSkills([]);
+            }
+          }
+          
+          // Set profile pic if available
+          if (userData.profilePic) {
+            setProfilePic(userData.profilePic);
+          }
         }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
     };
 
     fetchData();
-  }, []);
- useEffect(() => {
+    
+    // Also fetch social profiles
     const storedProfiles = JSON.parse(localStorage.getItem("profiles")) || [];
-    console.log("Fetched socialProfiles:", storedProfiles);
     setSocialProfiles(storedProfiles);
+  }, [userUid]);
 
+  useEffect(() => {
     const generateDates = () => {
       const result = [];
       const currentDate = new Date();
@@ -116,37 +145,44 @@ const ProfileCard = ({open}) => {
 
     generateDates();
   }, []);
+
   const handleEdit = () => {
     setIsEditing(true);
   };
- 
 
-  // New function to update user details in articles
+  // Update articles function
   const updateArticles = async (userId, userUpdates) => {
+    if (!userId) return;
+    
     // Get a reference to the articles node in the database
     const articlesRef = ref(database, "articles");
 
-    // Fetch all articles
-    const snapshot = await get(articlesRef);
+    try {
+      // Fetch all articles
+      const snapshot = await get(articlesRef);
 
-    if (snapshot.exists()) {
-      const articles = snapshot.val();
+      if (snapshot.exists()) {
+        const articles = snapshot.val();
 
-      // Iterate through articles and update those created by the user
-      for (const articleId in articles) {
-        if (articles[articleId].createdBy === userId) {
-          console.log("Updating..");
-          const articleRef = ref(database, `articles/${articleId}`);
-          const articleUpdates = {
-            author: `${userUpdates?.firstname} ${userUpdates?.surname}`,
-            avatar: userUpdates?.avatar,
-            pic: userUpdates?.profilePic,
-          };
-          await update(articleRef, articleUpdates);
+        // Iterate through articles and update those created by the user
+        for (const articleId in articles) {
+          if (articles[articleId].createdBy === userId) {
+            console.log("Updating article:", articleId);
+            const articleRef = ref(database, `articles/${articleId}`);
+            const articleUpdates = {
+              author: `${userUpdates?.firstname || ""} ${userUpdates?.surname || ""}`,
+              avatar: userUpdates?.avatar,
+              pic: userUpdates?.profilePic,
+            };
+            await update(articleRef, articleUpdates);
+          }
         }
       }
+    } catch (error) {
+      console.error("Error updating articles:", error);
     }
   };
+
   const handleAvatarChange = (newAvatar) => {
     setAvatar(newAvatar);
   };
@@ -167,9 +203,9 @@ const ProfileCard = ({open}) => {
     const file = e.target.files[0];
     if (file) {
       const user = auth.currentUser;
-      const userUid = user?.uid; // Ensure user is authenticated
+      const currentUserUid = user?.uid || userUid; // Use either auth user or stored UID
 
-      if (userUid) {
+      if (currentUserUid) {
         try {
           // Check file size
           const maxSize = 100 * 1024; // 100KB
@@ -194,15 +230,19 @@ const ProfileCard = ({open}) => {
 
               // Delete the previous profile picture if it exists
               if (profilePic) {
-                const previousRef = storageRef(storage, profilePic);
-                await deleteObject(previousRef);
+                try {
+                  const previousRef = storageRef(storage, profilePic);
+                  await deleteObject(previousRef);
+                } catch (deleteError) {
+                  console.log("Previous image not found or already deleted:", deleteError);
+                }
               }
 
               // Upload the new profile picture
               const fileExtension = file.name.split(".").pop();
               const newStorageRef = storageRef(
                 storage,
-                `profilepics/${userUid}.${fileExtension}`
+                `profilepics/${currentUserUid}.${fileExtension}`
               );
               await uploadBytes(newStorageRef, uploadBlob);
               const downloadURL = await getDownloadURL(newStorageRef);
@@ -229,12 +269,12 @@ const ProfileCard = ({open}) => {
       }
     }
   };
+
   const updateUserProfilePic = async (profilePicUrl) => {
+    if (!userUid) return;
+    
     const userRef = ref(database, `users/${userUid}`);
     const updates = {
-      profilePic: profilePicUrl,
-    };
-    const articleupdates = {
       profilePic: profilePicUrl,
     };
 
@@ -243,48 +283,58 @@ const ProfileCard = ({open}) => {
       await update(userRef, updates);
 
       // Update articles with new profile picture
-      await updateArticlespic(userUid, articleupdates);
+      await updateArticlespic(userUid, updates);
     } catch (error) {
       console.error("Error updating profile picture in user data:", error);
     }
   };
 
   //Updates Article pics
-
   const updateArticlespic = async (userId, userUpdates) => {
+    if (!userId) return;
+    
     // Get a reference to the articles node in the database
     const articlesRef = ref(database, "articles");
 
-    // Fetch all articles
-    const snapshot = await get(articlesRef);
+    try {
+      // Fetch all articles
+      const snapshot = await get(articlesRef);
 
-    if (snapshot.exists()) {
-      const articles = snapshot.val();
+      if (snapshot.exists()) {
+        const articles = snapshot.val();
 
-      // Iterate through articles and update those created by the user
-      for (const articleId in articles) {
-        if (articles[articleId].createdBy === userId) {
-          console.log("Updating..");
-          const articleRef = ref(database, `articles/${articleId}`);
-          const articleUpdates = {
-            pic: userUpdates?.profilePic,
-          };
-          await update(articleRef, articleUpdates);
+        // Iterate through articles and update those created by the user
+        for (const articleId in articles) {
+          if (articles[articleId].createdBy === userId) {
+            console.log("Updating article pic:", articleId);
+            const articleRef = ref(database, `articles/${articleId}`);
+            const articleUpdates = {
+              pic: userUpdates?.profilePic,
+            };
+            await update(articleRef, articleUpdates);
+          }
         }
       }
+    } catch (error) {
+      console.error("Error updating article pictures:", error);
     }
   };
 
   const fetchUserData = async (uid) => {
-    const userRef = ref(database, `users/${uid}`);
-    const snapshot = await get(userRef);
-    if (snapshot.exists()) {
-      const userData = snapshot.val();
-      // localStorage.setItem('Userid', userData.id);
-      return userData; // Return user data
-    } else {
-      console.error("No data available");
-      return null; // Return null if no data available
+    if (!uid) return null;
+    
+    try {
+      const userRef = ref(database, `users/${uid}`);
+      const snapshot = await get(userRef);
+      if (snapshot.exists()) {
+        return snapshot.val(); // Return user data
+      } else {
+        console.error("No user data available for UID:", uid);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error in fetchUserData:", error);
+      return null;
     }
   };
 
@@ -296,9 +346,9 @@ const ProfileCard = ({open}) => {
         academicYear,
         selectedSkills,
         socialProfiles,
-        email: "counsellor@gmail.com",
-        phone: "+918795768574",
-        gender: "Male",
+        email: userData?.email || userInfo?.email || "****@gmail.com",
+        phone: "+91****",
+        gender: userData?.gender || userInfo?.gender || "Male",
         college: "IIT Bombay",
       },
       null,
@@ -340,11 +390,17 @@ const ProfileCard = ({open}) => {
     localStorage.removeItem("resumeFile");
   };
 
+  // Use user data with fallbacks
+  const displayName = userInfo?.firstname || name.split(' ')[0] || "User";
+  const displayEmail = userData?.email || userInfo?.email ;
+  const displayGender = userData?.gender || userInfo?.gender || "Male";
+  const displayDob = userData?.dob || userInfo?.dob || dob;
+  
   return (
     <div className="profile-card-container">
       <div className="greeting">
         <div className="greeting-text">
-          <h1>Hello, {userInfo.firstname}!</h1>
+          <h1>Hello, {displayName}!</h1>
           <p>
             Your Profile is updated here. Dates, counselling and your Skills are
             all in one tap.
@@ -379,17 +435,19 @@ const ProfileCard = ({open}) => {
             </p>
           </div>
           <div className="about-info">
-            <h3>Email:</h3> <p>{userInfo.email}</p>
-          </div>
-          
-          <div className="about-info">
-            <h3>Gender : </h3> <p>{userInfo.gender}</p>
+            <h3>Email:</h3> <p>{displayEmail}</p>
           </div>
           <div className="about-info">
-            <h3>BirthDate : </h3> <p>{userInfo.dob}</p>
+            <h3>Phone : </h3> <p></p>
           </div>
           <div className="about-info">
-            <h3>College : </h3> <p>KIIT</p>
+            <h3>Gender : </h3> <p>{displayGender}</p>
+          </div>
+          <div className="about-info">
+            <h3>BirthDate : </h3> <p>{displayDob}</p>
+          </div>
+          <div className="about-info">
+            <h3>College : </h3> <p>IIT Bombay</p>
           </div>
           <div className="about-info">
             <h3>Academic Year : </h3> <p>{academicYear}</p>
@@ -424,19 +482,22 @@ const ProfileCard = ({open}) => {
           <img
             src={profilePic ? profilePic : avatar}
             className="profile-image"
+            alt="Profile"
           />
           <h3>{name}</h3>
           <p className="title">IIT Bombay</p>
           <p className="role">Student</p>
           <div className="social-profiles">
-            <a
-              key={userInfo.id}
-              href={userInfo.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className={`bx bxl-${userInfo.firstname?.toLowerCase()}`}/>
-            </a>
+            {userInfo?.id && (
+              <a
+                key={userInfo.id}
+                href={userInfo.url || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className={`bx bxl-${userInfo.firstname?.toLowerCase() || 'user'}`}/>
+              </a>
+            )}
           </div>
           <div className="skills-section">
             <h2>Skills</h2>
@@ -461,7 +522,7 @@ const ProfileCard = ({open}) => {
               Name:
               <input
                 type="text"
-                placeholder={userInfo.firstname + " " + userInfo.surname}
+                placeholder={(userInfo?.firstname || "") + " " + (userInfo?.surname || "")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -471,7 +532,7 @@ const ProfileCard = ({open}) => {
               <input
                 type="date"
                 value={dob}
-                placeholder={userInfo.dob}
+                placeholder={userInfo?.dob || ""}
                 onChange={(e) => setDob(e.target.value)}
               />
             </label>

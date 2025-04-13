@@ -1,16 +1,144 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import './CareerSupport.css';
-import Navbar from '../Navbar/Navbar';
-import Logo from "../../assets/logo.webp";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Switch } from 'antd';
-import { ThemeContext } from '../../App';
-import { signOut } from "firebase/auth";
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { motion } from 'framer-motion';
 import { getDatabase, ref, push, set } from 'firebase/database';
 import emailjs from 'emailjs-com';
 import { auth } from "../../firebase/auth";
-import Footer from '../Footer/Footer';
 import { toast } from 'react-toastify';
+import Navbar from '../Navbar/Navbar';
+import Footer from '../Footer/Footer';
+import './CareerSupport.css';
+
+// Animation variants
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6 }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
+// Particles component for header animation
+const ParticlesAnimation = () => {
+  const [particles, setParticles] = useState([]);
+  
+  useEffect(() => {
+    const generateParticles = () => {
+      const newParticles = [];
+      const count = window.innerWidth < 768 ? 15 : 30;
+      
+      for (let i = 0; i < count; i++) {
+        newParticles.push({
+          id: i,
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          size: Math.random() * (10 - 3) + 3,
+          duration: Math.random() * (25 - 10) + 10,
+          delay: Math.random() * 5
+        });
+      }
+      
+      setParticles(newParticles);
+    };
+    
+    generateParticles();
+    
+    // Regenerate on window resize
+    window.addEventListener('resize', generateParticles);
+    return () => window.removeEventListener('resize', generateParticles);
+  }, []);
+  
+  return (
+    <div className="particles-container">
+      {particles.map(particle => (
+        <motion.div
+          key={particle.id}
+          className="particle"
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            width: `${particle.size}px`,
+            height: `${particle.size}px`
+          }}
+          animate={{
+            x: [0, Math.random() * 100 - 50, 0],
+            y: [0, Math.random() * 100 - 50, 0],
+            opacity: [0, 0.5, 0]
+          }}
+          transition={{
+            duration: particle.duration,
+            delay: particle.delay,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+const ServiceCard = ({ icon, title, description }) => {
+  return (
+    <motion.div 
+      className="service-card"
+      variants={fadeIn}
+      whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+      transition={{ type: "spring", stiffness: 300 }}
+    >
+      <div className="service-card__icon">
+        <i className={icon}></i>
+      </div>
+      <h3 className="service-card__title">{title}</h3>
+      <p className="service-card__description">{description}</p>
+    </motion.div>
+  );
+};
+
+const PricingCard = ({ title, price, features, primaryAction, icon }) => {
+  return (
+    <motion.div 
+      className="pricing-card"
+      variants={fadeIn}
+      whileHover={{ 
+        y: -10,
+        boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+        transition: { type: "spring", stiffness: 300 }
+      }}
+    >
+      <div className="pricing-card__header">
+        <div className="pricing-card__icon">
+          <i className={icon}></i>
+        </div>
+        <h3 className="pricing-card__title">{title}</h3>
+        <div className="pricing-card__price">{price}</div>
+      </div>
+      <ul className="pricing-card__features">
+        {features.map((feature, index) => (
+          <li key={index}><i className="fas fa-check"></i> {feature}</li>
+        ))}
+      </ul>
+      <motion.button 
+        className="pricing-card__button"
+        onClick={primaryAction.onClick}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        {primaryAction.label}
+      </motion.button>
+    </motion.div>
+  );
+};
 
 const CareerSupport = () => {
   const [formData, setFormData] = useState({
@@ -18,12 +146,24 @@ const CareerSupport = () => {
     email: '',
     message: ''
   });
-
-const [showPopup,setShowPopup]=useState(false)
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
-
-
+  const pricingSectionRef = useRef(null);
   
+  // Check if user is authenticated
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        navigate('/');
+      }
+    });
+  }, [navigate]);
+
+  const scrollToPricing = () => {
+    if (pricingSectionRef.current) {
+      pricingSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,19 +171,8 @@ const [showPopup,setShowPopup]=useState(false)
       ...prevState,
       [name]: value
     }));
-
   };
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        // handle user logged in state
-      } else {
 
-          navigate('/');
-        
-      }
-    });
-  }, [navigate]);
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -56,12 +185,13 @@ const [showPopup,setShowPopup]=useState(false)
     };
 
     // Send email using EmailJS
-    emailjs.send('service_kszura2', 'template_u8shl9d', params, 'rSYpY_RsF76o4MgcA')
-      .then(() => {
+    emailjs.send("service_5wwoq0k", "template_pg1iusg")
+    .then(() => {
         console.log('Email sent successfully');
       })
       .catch((error) => {
         console.error('Email send error:', error);
+        toast.error('Failed to send email. Please try again.');
       });
 
     // Store form data in Firebase Realtime Database
@@ -70,456 +200,217 @@ const [showPopup,setShowPopup]=useState(false)
     const newQueryRef = push(queriesRef);
     set(newQueryRef, params)
       .then(() => {
-       setShowPopup(true); // Open modal on successful submission
-        setFormData({ name: '', email: '', message: '' }); // Reset form data
+        setShowPopup(true);
+        setFormData({ name: '', email: '', message: '' });
       })
       .catch((error) => {
         console.error('Error submitting query:', error);
+        toast.error('Failed to submit your query. Please try again.');
       });
   };
-
-
 
   const closePopup = () => {
     setShowPopup(false);
   };
-  const [fix, setFix] = useState(false);
 
-  const setFixed = useCallback(() => {
-    if (window.scrollY > 0) {
-      setFix(true);
-    } else {
-      setFix(false);
+  const services = [
+    {
+      icon: "fas fa-briefcase",
+      title: "Job Placement",
+      description: "We connect you with top employers in your field, leveraging our extensive network of industry partners."
+    },
+    {
+      icon: "fas fa-graduation-cap",
+      title: "Skill Development",
+      description: "Enhance your skills with our targeted training programs, designed to keep you competitive in today's job market."
+    },
+    {
+      icon: "fas fa-handshake",
+      title: "Career Counseling",
+      description: "Get personalized advice from experienced professionals to guide your career decisions and growth strategy."
+    },
+    {
+      icon: "fas fa-file-alt",
+      title: "Resume Building",
+      description: "Craft a compelling resume that highlights your strengths and catches the eye of potential employers."
+    },
+    {
+      icon: "fas fa-comments",
+      title: "Interview Preparation",
+      description: "Boost your confidence with mock interviews and expert tips to ace your next job interview."
+    },
+    {
+      icon: "fas fa-chart-line",
+      title: "Career Advancement",
+      description: "Develop strategies for climbing the corporate ladder and achieving your long-term career goals."
     }
-  }, []);
+  ];
 
-  useEffect(() => {
-    window.addEventListener("scroll", setFixed);
-    return () => {
-      window.removeEventListener("scroll", setFixed);
-    };
-  }, [setFixed]);
-
-
-  useEffect(() => {
-    window.addEventListener("scroll", setFixed);
-    return () => {
-      window.removeEventListener("scroll", setFixed);
-    };
-  }, [setFixed]);
-
-  const pricingSectionRef = useRef(null);
-
-  const scrollToPricing = () => {
-    if (pricingSectionRef.current) {
-      pricingSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+  const pricingPlans = [
+    {
+      title: "First Session",
+      price: "Free",
+      icon: "fas fa-rocket",
+      features: [
+        "30-minute consultation",
+        "Career path assessment",
+        "Basic advice and guidance"
+      ],
+      primaryAction: {
+        label: "Get Started",
+        onClick: () => window.location.href = '/livechat'
+      }
+    },
+    {
+      title: "Basic Package",
+      price: "₹99",
+      icon: "fas fa-star",
+      features: [
+        "3 one-hour sessions",
+        "Personalized career plan",
+        "Resume review and Interview preparation"
+      ],
+      primaryAction: {
+        label: "Choose Plan",
+        onClick: () => {}
+      }
+    },
+    {
+      title: "Premium Package",
+      price: "₹149",
+      icon: "fas fa-crown",
+      features: [
+        "5 sessions and Ongoing email support",
+        "Comprehensive career and job strategy",
+        "LinkedIn profile optimization"
+      ],
+      primaryAction: {
+        label: "Choose Plan",
+        onClick: () => {}
+      }
     }
-  };
-
+  ];
 
   return (
     <>
-      <div className="career-support">
+      <div className="career-support dark-theme">
         <Navbar />
-        <header className="career-support__header">
-          <h1 className="career-support__main-title">Elevate Your Career</h1>
-          <p className="career-support__subtitle">
+        <motion.header 
+          className="career-support__header"
+          initial="hidden"
+          animate="visible"
+          variants={fadeIn}
+        >
+          <ParticlesAnimation />
+          
+          <motion.h1 
+            className="career-support__main-title"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            Elevate Your Career
+          </motion.h1>
+          <motion.p 
+            className="career-support__subtitle"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+          >
             Empowering professionals to reach new heights
-          </p>
-        </header>
+          </motion.p>
+          <motion.button 
+            className="career-support__cta-button header-cta"
+            onClick={scrollToPricing}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+          >
+            Explore Services
+          </motion.button>
+        </motion.header>
 
-        <section className="career-support__content">
-          <h2 className="career-support__title">Our Career Support Services</h2>
-          <div className="career-support__services">
-            <div className="service-card">
-              <div className="service-card__icon">
-                <i className="fas fa-briefcase"></i>
-              </div>
-              <h3 className="service-card__title">Job Placement</h3>
-              <p className="service-card__description">
-                We connect you with top employers in your field, leveraging our
-                extensive network of industry partners.
-              </p>
-            </div>
-            <div className="service-card">
-              <div className="service-card__icon">
-                <i className="fas fa-graduation-cap"></i>
-              </div>
-              <h3 className="service-card__title">Skill Development</h3>
-              <p className="service-card__description">
-                Enhance your skills with our targeted training programs,
-                designed to keep you competitive in today's job market.
-              </p>
-            </div>
-            <div className="service-card">
-              <div className="service-card__icon">
-                <i className="fas fa-handshake"></i>
-              </div>
-              <h3 className="service-card__title">Career Counseling</h3>
-              <p className="service-card__description">
-                Get personalized advice from experienced professionals to guide
-                your career decisions and growth strategy.
-              </p>
-            </div>
-            <div className="service-card">
-              <div className="service-card__icon">
-                <i className="fas fa-file-alt"></i>
-              </div>
-              <h3 className="service-card__title">Resume Building</h3>
-              <p className="service-card__description">
-                Craft a compelling resume that highlights your strengths and
-                catches the eye of potential employers.
-              </p>
-            </div>
-            <div className="service-card">
-              <div className="service-card__icon">
-                <i className="fas fa-comments"></i>
-              </div>
-              <h3 className="service-card__title">Interview Preparation</h3>
-              <p className="service-card__description">
-                Boost your confidence with mock interviews and expert tips to
-                ace your next job interview.
-              </p>
-            </div>
-            <div className="service-card">
-              <div className="service-card__icon">
-                <i className="fas fa-chart-line"></i>
-              </div>
-              <h3 className="service-card__title">Career Advancement</h3>
-              <p className="service-card__description">
-                Develop strategies for climbing the corporate ladder and
-                achieving your long-term career goals.
-              </p>
-            </div>
-          </div>
-        </section>
+        <motion.section 
+          className="career-support__content"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={staggerContainer}
+        >
+          <motion.h2 
+            className="career-support__title"
+            variants={fadeIn}
+          >
+            Our Career Support Services
+          </motion.h2>
+          <motion.div 
+            className="career-support__services"
+            variants={staggerContainer}
+          >
+            {services.map((service, index) => (
+              <ServiceCard
+                key={index}
+                icon={service.icon}
+                title={service.title}
+                description={service.description}
+              />
+            ))}
+          </motion.div>
+        </motion.section>
 
-        <section className="career-support__pricing" ref={pricingSectionRef}>
-          <h2 className="career-support__pricing-title">
+        <motion.section 
+          className="career-support__pricing" 
+          ref={pricingSectionRef}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={staggerContainer}
+        >
+          <motion.h2 
+            className="career-support__pricing-title"
+            variants={fadeIn}
+          >
             Career Advice Pricing
-          </h2>
-          <div className="pricing-cards">
-            <div className="careercard">
-              <a href="#" class="card credentialing">
-                <div class="overlay"></div>
-                <h1 className="sessioncar">First session</h1>
-                <h3 className="sessioncar2">Free</h3>
-                <div class="circle">
-                  <svg
-                    width="64px"
-                    height="72px"
-                    viewBox="27 21 64 72"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                  >
-                    <defs>
-                      <polygon
-                        id="path-1"
-                        points="60.9784821 18.4748913 60.9784821 0.0299638385 0.538377293 0.0299638385 0.538377293 18.4748913"
-                      ></polygon>
-                    </defs>
-                    <g
-                      id="Group-12"
-                      stroke="none"
-                      stroke-width="1"
-                      fill="none"
-                      fill-rule="evenodd"
-                      transform="translate(27.000000, 21.000000)"
-                    >
-                      <g id="Group-5">
-                        <g
-                          id="Group-3"
-                          transform="translate(2.262327, 21.615176)"
-                        >
-                          <mask id="mask-2" fill="white">
-                            <use xlink:href="#path-1"></use>
-                          </mask>
-                          <g id="Clip-2"></g>
-                          <path
-                            d="M7.17774177,18.4748913 L54.3387782,18.4748913 C57.9910226,18.4748913 60.9789911,15.7266455 60.9789911,12.3681986 L60.9789911,6.13665655 C60.9789911,2.77820965 57.9910226,0.0299638385 54.3387782,0.0299638385 L7.17774177,0.0299638385 C3.52634582,0.0299638385 0.538377293,2.77820965 0.538377293,6.13665655 L0.538377293,12.3681986 C0.538377293,15.7266455 3.52634582,18.4748913 7.17774177,18.4748913"
-                            id="Fill-1"
-                            fill="#59A785"
-                            mask="url(#mask-2)"
-                          ></path>
-                        </g>
-                        <polygon
-                          id="Fill-4"
-                          fill="#FFFFFF"
-                          transform="translate(31.785111, 30.877531) rotate(-2.000000) translate(-31.785111, -30.877531) "
-                          points="62.0618351 55.9613216 7.2111488 60.3692832 1.50838775 5.79374073 56.3582257 1.38577917"
-                        ></polygon>
-                        <ellipse
-                          id="Oval-3"
-                          fill="#073c99"
-                          opacity="0.216243004"
-                          cx="30.0584472"
-                          cy="21.7657707"
-                          rx="9.95169733"
-                          ry="9.17325562"
-                        ></ellipse>
-                        <g
-                          id="Group-4"
-                          transform="translate(16.959615, 6.479082)"
-                          fill="#073c99"
-                        >
-                          <polygon
-                            id="Fill-6"
-                            points="10.7955395 21.7823628 0.11873799 11.3001058 4.25482787 7.73131106 11.0226557 14.3753897 27.414824 1.77635684e-15 31.3261391 3.77891399"
-                          ></polygon>
-                        </g>
-                        <path
-                          d="M4.82347935,67.4368303 L61.2182039,67.4368303 C62.3304205,67.4368303 63.2407243,66.5995595 63.2407243,65.5765753 L63.2407243,31.3865871 C63.2407243,30.3636029 62.3304205,29.5263321 61.2182039,29.5263321 L4.82347935,29.5263321 C3.71126278,29.5263321 2.80095891,30.3636029 2.80095891,31.3865871 L2.80095891,65.5765753 C2.80095891,66.5995595 3.71126278,67.4368303 4.82347935,67.4368303"
-                          id="Fill-8"
-                          fill="#073c99"
-                        ></path>
-                        <path
-                          d="M33.3338063,67.4368303 L61.2181191,67.4368303 C62.3303356,67.4368303 63.2406395,66.5995595 63.2406395,65.5765753 L63.2406395,31.3865871 C63.2406395,30.3636029 62.3303356,29.5263321 61.2181191,29.5263321 L33.3338063,29.5263321 C32.2215897,29.5263321 31.3112859,30.3636029 31.3112859,31.3865871 L31.3112859,65.5765753 C31.3112859,66.5995595 32.2215897,67.4368303 33.3338063,67.4368303"
-                          id="Fill-10"
-                          fill="#073c99"
-                        ></path>
-                        <path
-                          d="M29.4284029,33.2640869 C29.4284029,34.2202068 30.2712569,34.9954393 31.3107768,34.9954393 C32.3502968,34.9954393 33.1931508,34.2202068 33.1931508,33.2640869 C33.1931508,32.3079669 32.3502968,31.5327345 31.3107768,31.5327345 C30.2712569,31.5327345 29.4284029,32.3079669 29.4284029,33.2640869"
-                          id="Fill-15"
-                          fill="#073c99"
-                        ></path>
-                        <path
-                          d="M8.45417501,71.5549073 L57.5876779,71.5549073 C60.6969637,71.5549073 63.2412334,69.2147627 63.2412334,66.3549328 L63.2412334,66.3549328 C63.2412334,63.4951029 60.6969637,61.1549584 57.5876779,61.1549584 L8.45417501,61.1549584 C5.34488919,61.1549584 2.80061956,63.4951029 2.80061956,66.3549328 L2.80061956,66.3549328 C2.80061956,69.2147627 5.34488919,71.5549073 8.45417501,71.5549073"
-                          id="Fill-12"
-                          fill="#073c99"
-                        ></path>
-                      </g>
-                    </g>
-                  </svg>
-                </div>
-                <p>
-                  <ul className="pricing-card__features">
-                    <li>30-minute consultation</li>
-                    <li>Career path assessment</li>
-                    <li>Basic advice and guidance</li>
-                  </ul>
-                  <button className="pricing-card__button">Get Started</button>
-                </p>
-              </a>
-            </div>
-            <div className="careercard">
-              <a href="#" class="card credentialing">
-                <div class="overlay"></div>
-                <h1 className="sessioncar">Basic Package</h1>
-                <h3 className="sessioncar2">$99</h3>
-                <div class="circle">
-                  <svg
-                    width="64px"
-                    height="72px"
-                    viewBox="27 21 64 72"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                  >
-                    <defs>
-                      <polygon
-                        id="path-1"
-                        points="60.9784821 18.4748913 60.9784821 0.0299638385 0.538377293 0.0299638385 0.538377293 18.4748913"
-                      ></polygon>
-                    </defs>
-                    <g
-                      id="Group-12"
-                      stroke="none"
-                      stroke-width="1"
-                      fill="none"
-                      fill-rule="evenodd"
-                      transform="translate(27.000000, 21.000000)"
-                    >
-                      <g id="Group-5">
-                        <g
-                          id="Group-3"
-                          transform="translate(2.262327, 21.615176)"
-                        >
-                          <mask id="mask-2" fill="white">
-                            <use xlink:href="#path-1"></use>
-                          </mask>
-                          <g id="Clip-2"></g>
-                          <path
-                            d="M7.17774177,18.4748913 L54.3387782,18.4748913 C57.9910226,18.4748913 60.9789911,15.7266455 60.9789911,12.3681986 L60.9789911,6.13665655 C60.9789911,2.77820965 57.9910226,0.0299638385 54.3387782,0.0299638385 L7.17774177,0.0299638385 C3.52634582,0.0299638385 0.538377293,2.77820965 0.538377293,6.13665655 L0.538377293,12.3681986 C0.538377293,15.7266455 3.52634582,18.4748913 7.17774177,18.4748913"
-                            id="Fill-1"
-                            fill="#59A785"
-                            mask="url(#mask-2)"
-                          ></path>
-                        </g>
-                        <polygon
-                          id="Fill-4"
-                          fill="#FFFFFF"
-                          transform="translate(31.785111, 30.877531) rotate(-2.000000) translate(-31.785111, -30.877531) "
-                          points="62.0618351 55.9613216 7.2111488 60.3692832 1.50838775 5.79374073 56.3582257 1.38577917"
-                        ></polygon>
-                        <ellipse
-                          id="Oval-3"
-                          fill="#073c99"
-                          opacity="0.216243004"
-                          cx="30.0584472"
-                          cy="21.7657707"
-                          rx="9.95169733"
-                          ry="9.17325562"
-                        ></ellipse>
-                        <g
-                          id="Group-4"
-                          transform="translate(16.959615, 6.479082)"
-                          fill="#073c99"
-                        >
-                          <polygon
-                            id="Fill-6"
-                            points="10.7955395 21.7823628 0.11873799 11.3001058 4.25482787 7.73131106 11.0226557 14.3753897 27.414824 1.77635684e-15 31.3261391 3.77891399"
-                          ></polygon>
-                        </g>
-                        <path
-                          d="M4.82347935,67.4368303 L61.2182039,67.4368303 C62.3304205,67.4368303 63.2407243,66.5995595 63.2407243,65.5765753 L63.2407243,31.3865871 C63.2407243,30.3636029 62.3304205,29.5263321 61.2182039,29.5263321 L4.82347935,29.5263321 C3.71126278,29.5263321 2.80095891,30.3636029 2.80095891,31.3865871 L2.80095891,65.5765753 C2.80095891,66.5995595 3.71126278,67.4368303 4.82347935,67.4368303"
-                          id="Fill-8"
-                          fill="#073c99"
-                        ></path>
-                        <path
-                          d="M33.3338063,67.4368303 L61.2181191,67.4368303 C62.3303356,67.4368303 63.2406395,66.5995595 63.2406395,65.5765753 L63.2406395,31.3865871 C63.2406395,30.3636029 62.3303356,29.5263321 61.2181191,29.5263321 L33.3338063,29.5263321 C32.2215897,29.5263321 31.3112859,30.3636029 31.3112859,31.3865871 L31.3112859,65.5765753 C31.3112859,66.5995595 32.2215897,67.4368303 33.3338063,67.4368303"
-                          id="Fill-10"
-                          fill="#073c99"
-                        ></path>
-                        <path
-                          d="M29.4284029,33.2640869 C29.4284029,34.2202068 30.2712569,34.9954393 31.3107768,34.9954393 C32.3502968,34.9954393 33.1931508,34.2202068 33.1931508,33.2640869 C33.1931508,32.3079669 32.3502968,31.5327345 31.3107768,31.5327345 C30.2712569,31.5327345 29.4284029,32.3079669 29.4284029,33.2640869"
-                          id="Fill-15"
-                          fill="#073c99"
-                        ></path>
-                        <path
-                          d="M8.45417501,71.5549073 L57.5876779,71.5549073 C60.6969637,71.5549073 63.2412334,69.2147627 63.2412334,66.3549328 L63.2412334,66.3549328 C63.2412334,63.4951029 60.6969637,61.1549584 57.5876779,61.1549584 L8.45417501,61.1549584 C5.34488919,61.1549584 2.80061956,63.4951029 2.80061956,66.3549328 L2.80061956,66.3549328 C2.80061956,69.2147627 5.34488919,71.5549073 8.45417501,71.5549073"
-                          id="Fill-12"
-                          fill="#073c99"
-                        ></path>
-                      </g>
-                    </g>
-                  </svg>
-                </div>
-                <p>
-                  <ul className="pricing-card__features">
-                    <li>3 one-hour sessions</li>
-                    <li>Personalized career plan</li>
-                    <li>Resume review and Interview preparation</li>
-                  </ul>
-                  <button className="pricing-card__button">Choose plan</button>
-                </p>
-              </a>
-            </div>
-            <div className="careercard">
-              <a href="#" class="card credentialing">
-                <div class="overlay"></div>
-                <h1 className="sessioncar">Premium Package</h1>
-                <h3 className="sessioncar2">$249</h3>
-                <div class="circle">
-                  <svg
-                    width="64px"
-                    height="72px"
-                    viewBox="27 21 64 72"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                  >
-                    <defs>
-                      <polygon
-                        id="path-1"
-                        points="60.9784821 18.4748913 60.9784821 0.0299638385 0.538377293 0.0299638385 0.538377293 18.4748913"
-                      ></polygon>
-                    </defs>
-                    <g
-                      id="Group-12"
-                      stroke="none"
-                      stroke-width="1"
-                      fill="none"
-                      fill-rule="evenodd"
-                      transform="translate(27.000000, 21.000000)"
-                    >
-                      <g id="Group-5">
-                        <g
-                          id="Group-3"
-                          transform="translate(2.262327, 21.615176)"
-                        >
-                          <mask id="mask-2" fill="white">
-                            <use xlink:href="#path-1"></use>
-                          </mask>
-                          <g id="Clip-2"></g>
-                          <path
-                            d="M7.17774177,18.4748913 L54.3387782,18.4748913 C57.9910226,18.4748913 60.9789911,15.7266455 60.9789911,12.3681986 L60.9789911,6.13665655 C60.9789911,2.77820965 57.9910226,0.0299638385 54.3387782,0.0299638385 L7.17774177,0.0299638385 C3.52634582,0.0299638385 0.538377293,2.77820965 0.538377293,6.13665655 L0.538377293,12.3681986 C0.538377293,15.7266455 3.52634582,18.4748913 7.17774177,18.4748913"
-                            id="Fill-1"
-                            fill="#59A785"
-                            mask="url(#mask-2)"
-                          ></path>
-                        </g>
-                        <polygon
-                          id="Fill-4"
-                          fill="#FFFFFF"
-                          transform="translate(31.785111, 30.877531) rotate(-2.000000) translate(-31.785111, -30.877531) "
-                          points="62.0618351 55.9613216 7.2111488 60.3692832 1.50838775 5.79374073 56.3582257 1.38577917"
-                        ></polygon>
-                        <ellipse
-                          id="Oval-3"
-                          fill="#073c99"
-                          opacity="0.216243004"
-                          cx="30.0584472"
-                          cy="21.7657707"
-                          rx="9.95169733"
-                          ry="9.17325562"
-                        ></ellipse>
-                        <g
-                          id="Group-4"
-                          transform="translate(16.959615, 6.479082)"
-                          fill="#073c99"
-                        >
-                          <polygon
-                            id="Fill-6"
-                            points="10.7955395 21.7823628 0.11873799 11.3001058 4.25482787 7.73131106 11.0226557 14.3753897 27.414824 1.77635684e-15 31.3261391 3.77891399"
-                          ></polygon>
-                        </g>
-                        <path
-                          d="M4.82347935,67.4368303 L61.2182039,67.4368303 C62.3304205,67.4368303 63.2407243,66.5995595 63.2407243,65.5765753 L63.2407243,31.3865871 C63.2407243,30.3636029 62.3304205,29.5263321 61.2182039,29.5263321 L4.82347935,29.5263321 C3.71126278,29.5263321 2.80095891,30.3636029 2.80095891,31.3865871 L2.80095891,65.5765753 C2.80095891,66.5995595 3.71126278,67.4368303 4.82347935,67.4368303"
-                          id="Fill-8"
-                          fill="#073c99"
-                        ></path>
-                        <path
-                          d="M33.3338063,67.4368303 L61.2181191,67.4368303 C62.3303356,67.4368303 63.2406395,66.5995595 63.2406395,65.5765753 L63.2406395,31.3865871 C63.2406395,30.3636029 62.3303356,29.5263321 61.2181191,29.5263321 L33.3338063,29.5263321 C32.2215897,29.5263321 31.3112859,30.3636029 31.3112859,31.3865871 L31.3112859,65.5765753 C31.3112859,66.5995595 32.2215897,67.4368303 33.3338063,67.4368303"
-                          id="Fill-10"
-                          fill="#073c99"
-                        ></path>
-                        <path
-                          d="M29.4284029,33.2640869 C29.4284029,34.2202068 30.2712569,34.9954393 31.3107768,34.9954393 C32.3502968,34.9954393 33.1931508,34.2202068 33.1931508,33.2640869 C33.1931508,32.3079669 32.3502968,31.5327345 31.3107768,31.5327345 C30.2712569,31.5327345 29.4284029,32.3079669 29.4284029,33.2640869"
-                          id="Fill-15"
-                          fill="#073c99"
-                        ></path>
-                        <path
-                          d="M8.45417501,71.5549073 L57.5876779,71.5549073 C60.6969637,71.5549073 63.2412334,69.2147627 63.2412334,66.3549328 L63.2412334,66.3549328 C63.2412334,63.4951029 60.6969637,61.1549584 57.5876779,61.1549584 L8.45417501,61.1549584 C5.34488919,61.1549584 2.80061956,63.4951029 2.80061956,66.3549328 L2.80061956,66.3549328 C2.80061956,69.2147627 5.34488919,71.5549073 8.45417501,71.5549073"
-                          id="Fill-12"
-                          fill="#073c99"
-                        ></path>
-                      </g>
-                    </g>
-                  </svg>
-                </div>
-                <p>
-                  <ul className="pricing-card__features">
-                    <li>5 sessions and Ongoing email support</li>
-                    <li>Comprehensive career and job strategy</li>
-                    <li>
-                      LinkedIn profile optimization
-                    </li>
-                  </ul>
-                  <button className="pricing-card__button">Choose plan</button>
-                </p>
-              </a>
-            </div>
-          </div>
-        </section>
+          </motion.h2>
+          <motion.div 
+            className="pricing-cards"
+            variants={staggerContainer}
+          >
+            {pricingPlans.map((plan, index) => (
+              <PricingCard
+                key={index}
+                title={plan.title}
+                price={plan.price}
+                icon={plan.icon}
+                features={plan.features}
+                primaryAction={plan.primaryAction}
+              />
+            ))}
+          </motion.div>
+        </motion.section>
 
-        <section className="career-support__form-section">
-          <h2 className="career-support__form-title">
+        <motion.section 
+          className="career-support__form-section"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={fadeIn}
+        >
+          <motion.h2 
+            className="career-support__form-title"
+            variants={fadeIn}
+          >
             Get Personalized Career Advice
-          </h2>
-          <form className="career-support__form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Name:</label>
+          </motion.h2>
+          <motion.form 
+            className="career-support__form" 
+            onSubmit={handleSubmit}
+            variants={staggerContainer}
+          >
+            <motion.div className="form-group" variants={fadeIn}>
+              <label htmlFor="name">Name</label>
               <input
                 type="text"
                 id="name"
@@ -527,10 +418,11 @@ const [showPopup,setShowPopup]=useState(false)
                 value={formData.name}
                 onChange={handleInputChange}
                 required
+                placeholder="Your name"
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="email">Email:</label>
+            </motion.div>
+            <motion.div className="form-group" variants={fadeIn}>
+              <label htmlFor="email">Email</label>
               <input
                 type="email"
                 id="email"
@@ -538,52 +430,103 @@ const [showPopup,setShowPopup]=useState(false)
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                style={{ width: "100%", borderColor: "#76c6f5" }}
+                placeholder="Your email"
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="message">Message:</label>
+            </motion.div>
+            <motion.div className="form-group" variants={fadeIn}>
+              <label htmlFor="message">Message</label>
               <textarea
                 id="message"
                 name="message"
                 value={formData.message}
                 onChange={handleInputChange}
                 required
+                placeholder="How can we help you?"
+                rows="5"
               ></textarea>
-            </div>
-            <button type="submit" className="career-support__form-submit">
+            </motion.div>
+            <motion.button 
+              type="submit" 
+              className="career-support__form-submit"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              variants={fadeIn}
+            >
               Send Message
-            </button>
-          </form>
-        </section>
+            </motion.button>
+          </motion.form>
+        </motion.section>
 
-        <section className="career-support__cta">
-          <h2 className="career-support__cta-title">
+        <motion.section 
+          className="career-support__cta-section"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={fadeIn}
+        >
+          <motion.h2 
+            className="career-support__cta-title"
+            variants={fadeIn}
+          >
             Ready to Take the Next Step?
-          </h2>
-          <p className="career-support__cta-text">
-            Join thousands of professionals who have accelerated their careers
-            with our support.
-          </p>
-          <button
+          </motion.h2>
+          <motion.p 
+            className="career-support__cta-text"
+            variants={fadeIn}
+          >
+            Join thousands of professionals who have accelerated their careers with our support.
+          </motion.p>
+          <motion.button
             className="career-support__cta-button"
             onClick={scrollToPricing}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            variants={fadeIn}
           >
             Get Started Today
-          </button>
-        </section>
+          </motion.button>
+        </motion.section>
 
         {showPopup && (
-          <div className="popup">
-            <div className="popup-content">
-              <h2>Thank You!</h2>
-              <p>
-                Your message has been sent successfully. We will reach out to
-                you soon.
-              </p>
-              <button onClick={closePopup}>Close</button>
-            </div>
-          </div>
+          <motion.div 
+            className="popup-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div 
+              className="popup-content"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <motion.h2 
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                Thank You!
+              </motion.h2>
+              <motion.p
+                initial={{ y: -10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                Your message has been sent successfully. We will reach out to you soon.
+              </motion.p>
+              <motion.button 
+                onClick={closePopup}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                Close
+              </motion.button>
+            </motion.div>
+          </motion.div>
         )}
       </div>
       <Footer />

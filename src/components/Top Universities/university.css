@@ -1,445 +1,96 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-:root {
-  /* Light mode colors - refreshed with modern palette */
-  --color-primary: #2563eb;
-  --color-primary-dark: #1e40af;
-  --color-primary-light: #3b82f6;
-  --color-secondary: #10b981;
-  --color-accent: #f59e0b;
-  --color-background: #f8fafc;
-  --color-card: #ffffff;
-  --color-text: #1e293b;
-  --color-text-secondary: #64748b;
-  --color-text-light: #ffffff;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-shadow: rgba(0, 0, 0, 0.08);
-  --color-skeleton: #e2e8f0;
-  --color-skeleton-highlight: #f1f5f9;
-  --card-hover-bg: #f1f5f9;
-  --transition-speed: 0.3s;
+/* Additional styles to add to university.css */
+body {
+  background-color: #121212;
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  padding-top:50px;
 }
 
-/* Dark mode colors - more modern dark theme */
-[data-theme="dark"] .universityPage,
-#dark .universityPage {
-  --color-primary: #3b82f6;
-  --color-primary-dark: #2563eb;
-  --color-primary-light: #60a5fa;
-  --color-secondary: #10b981;
-  --color-accent: #f59e0b;
-  --color-background: #0f172a;
-  --color-card: #1e293b;
-  --color-text: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-text-light: #ffffff;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-shadow: rgba(0, 0, 0, 0.25);
-  --color-skeleton: #334155;
-  --color-skeleton-highlight: #475569;
-  --card-hover-bg: #273549;
-}
-
-/* Base styles */
-.universityPage {
-  background-color: var(--color-background);
-  font-family: 'Poppins', sans-serif;
-  color: var(--color-text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  transition: background-color var(--transition-speed) ease;
-}
-
-/* Header styles - modernized with gradients and shapes */
-.universityPage-header {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-  color: var(--color-text-light);
-  text-align: center;
-  padding: 8rem 2rem 10rem;
-  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-  position: relative;
-  box-shadow: 0 4px 20px var(--color-shadow);
-  transition: all var(--transition-speed) ease;
-  margin-bottom: 50px;
-}
-
-.universityPage-main-title {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  letter-spacing: -0.5px;
-  background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0.8));
+.gradient-text {
+  background: linear-gradient(90deg, #a5b4fc, #818cf8, #6366f1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: transparent;
 }
 
-.universityPage-subtitle {
-  font-size: clamp(1.1rem, 2vw, 1.6rem);
-  font-weight: 300;
-  opacity: 0.9;
-  max-width: 600px;
-  margin: 0 auto 2rem;
-}
-
-/* Theme toggle button */
-.theme-toggle-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  backdrop-filter: blur(5px);
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
-
-.theme-toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-}
-
-/* Content styles - more breathing room */
-.universityPage-content {
-  padding: 4rem 2rem 8rem;
-  margin-top: -6rem;
-  flex: 1;
-  position: relative;
-  z-index: 1;
-}
-
-.universityPage-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2.5rem;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* Card styles - modern glass effect */
-.universityPage-card {
-  background-color: var(--color-card);
-  border-radius: 16px;
-  box-shadow: 0 10px 30px var(--color-shadow);
-  padding: 0;
-  text-align: center;
-  transition: all var(--transition-speed) cubic-bezier(0.2, 0.8, 0.2, 1);
+.search-container {
+  margin-top: 2rem;
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  border: 1px solid var(--color-border);
-  overflow: hidden;
-  position: relative;
-  backdrop-filter: blur(5px);
-}
-
-.universityPage-card:hover {
-  transform: translateY(-12px);
-  box-shadow: 0 25px 50px var(--color-shadow);
-  background-color: var(--card-hover-bg);
-}
-
-.universityPage-image-container {
-  margin-bottom: 0;
-  overflow: hidden;
-  height: 200px;
-  position: relative;
-}
-
-.universityPage-image-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.5));
-  opacity: 0.5;
-  transition: opacity 0.3s ease;
-}
-
-.universityPage-card:hover .universityPage-image-container::after {
-  opacity: 0.7;
-}
-
-.universityPage-image {
+  justify-content: center;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.universityPage-card:hover .universityPage-image {
-  transform: scale(1.1);
-}
-
-.universityPage-title {
-  color: var(--color-primary);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 1.5rem 1.5rem 0.75rem;
-  padding: 0 0.5rem;
-  transition: color var(--transition-speed) ease;
-  position: relative;
-}
-
-.universityPage-title::after {
-  content: '';
-  position: absolute;
-  width: 40px;
-  height: 3px;
-  background: var(--color-primary);
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-.universityPage-card:hover .universityPage-title::after {
-  width: 60px;
-}
-
-.universityPage-company {
+.search-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
   font-size: 1rem;
-  margin: 1.5rem 1.5rem 1rem;
-  font-weight: 400;
-  padding: 0 1rem;
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 2rem;
+  color: white;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.universityPage-link {
-  color: var(--color-primary-light);
-  text-decoration: none;
-  transition: all var(--transition-speed) ease;
-  word-break: break-all;
-  position: relative;
-  padding-bottom: 2px;
+.search-input:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
 }
 
-.universityPage-link:hover {
-  color: var(--color-primary);
+.search-input::placeholder {
+  color: #71717a;
 }
 
-.universityPage-link::after {
-  content: '';
+.search-button {
   position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: var(--color-primary);
-  transition: width 0.3s ease;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #818cf8;
+  padding: 0.75rem;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.3s ease;
 }
 
-.universityPage-link:hover::after {
-  width: 100%;
+.search-button:hover {
+  background: rgba(99, 102, 241, 0.1);
 }
 
-.universityPage-stats,
-.universityPage-location {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin: 0.75rem 1.5rem;
-  color: var(--color-text-secondary);
-  padding: 0 1rem;
+/* Add these animations to CardHolder.css */
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
-.universityPage-location {
-  margin-bottom: 1.5rem;
+.card:nth-child(odd) {
+  animation: floating 6s ease-in-out infinite;
 }
 
-.universityPage-stats-label,
-.universityPage-location-label {
-  font-weight: 600;
-  margin-right: 0.5rem;
-  color: var(--color-text);
-  position: relative;
+.card:nth-child(even) {
+  animation: floating 7s ease-in-out infinite;
+  animation-delay: 1s;
 }
 
-.universityPage-stats-label::before,
-.universityPage-location-label::before {
-  content: '•';
-  color: var(--color-primary);
-  margin-right: 0.5rem;
-  font-weight: bold;
-}
-
-/* Skeleton loading styles - improved animation */
-.skeleton-card {
-  position: relative;
-  overflow: hidden;
-  padding: 1.5rem;
-}
-
-.skeleton-img,
-.skeleton-title,
-.skeleton-company,
-.skeleton-description,
-.skeleton-location {
-  background-color: var(--color-skeleton);
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.skeleton-img {
-  height: 200px;
-  border-radius: 12px;
-  margin-top: 0;
-  margin-left: -1.5rem;
-  margin-right: -1.5rem;
-  width: calc(100% + 3rem);
-}
-
-.skeleton-title {
-  height: 28px;
-  width: 70%;
-  margin: 1.5rem auto 1rem;
-}
-
-.skeleton-company {
-  height: 20px;
-  width: 85%;
-  margin: 0.75rem auto;
-}
-
-.skeleton-description,
-.skeleton-location {
-  height: 16px;
-  width: 60%;
-  margin: 0.75rem auto;
-}
-
-.skeleton-img::after,
-.skeleton-title::after,
-.skeleton-company::after,
-.skeleton-description::after,
-.skeleton-location::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--color-skeleton-highlight),
-    transparent
-  );
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-/* Cool animations for cards */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-  }
-}
-
-/* Floating animation */
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-/* Responsive styles */
-@media (max-width: 1200px) {
-  .universityPage-list {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    padding: 0 1rem;
-  }
-}
-
+/* Media queries for the search container */
 @media (max-width: 768px) {
-  .universityPage-header {
-    padding: 6rem 1.5rem 8rem;
+  .search-container {
+    max-width: 90%;
   }
   
-  .universityPage-content {
-    padding: 3rem 1.5rem;
-    margin-top: -5rem;
+  .universityPage-main-title {
+    font-size: 2rem;
   }
   
-  .universityPage-list {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .universityPage-header {
-    padding: 4rem 1rem 6rem;
-    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-  }
-  
-  .universityPage-content {
-    padding: 2rem 1rem;
-    margin-top: -4rem;
-  }
-  
-  .universityPage-list {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Accessibility improvements */
-@media (prefers-reduced-motion) {
-  .universityPage-card,
-  .universityPage-card:hover,
-  .universityPage-image,
-  .skeleton-img::after,
-  .skeleton-title::after,
-  .skeleton-company::after,
-  .skeleton-description::after,
-  .skeleton-location::after {
-    transition: none;
-    animation: none;
-    transform: none;
-  }
-  
-  .universityPage-title::after,
-  .universityPage-link::after {
-    transition: none;
+  .universityPage-subtitle {
+    font-size: 1rem;
   }
 }

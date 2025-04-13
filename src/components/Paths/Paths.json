@@ -31,7 +31,7 @@
               "steps": [
                 { "stepNumber": 1, "description": "5th, 6th, 7th, 8th, 9th, 10th" },
                 { "stepNumber": 2, "description": "12th,11th" },
-                { "stepNumber": 3, "description": "Bsc" },
+                { "stepNumber": 3, "description": "B.Sc , Bca" },
                 { "stepNumber": 4, "description": "GATE + PSU Job + IES Equivalent Role" },
                 { "stepNumber": 5, "description": "IES Equivalent Govt Job" }
               ]

@@ -10,7 +10,7 @@ import {
   ForgotPasswordForm,
   SignUpForm,
   FAQs,
-  Contribute,
+ 
 } from "./components/index";
 import Loading from "./components/Loading/Loading";
 import Login from "./components/Login/Login";
@@ -22,17 +22,10 @@ import Privacy from "./components/Privacy-Policy/Privacy";
 import Terms from "./components/Terms/Terms";
 import JoinUs from "./components/Joinus/JoinUs";
 import Help from "./components/Help/Help";
-import Blogs from "./components/blogs/Blogs";
+import Livechat from "./components/LiveChat/LiveChat";
 import CareerSupport from "./components/Career Support/CareerSupport";
 import Paths from "./components/Paths/Paths";
-import BlogWrite from "./components/blogs/Blogswrite";
 import University from "./components/Top Universities/University";
-import StudentLayout from "./components/Student/StudentLayout";
-import Achievements from "./components/Student/Achievements";
-import StudentDefault from "./components/Student/StudentDefault";
-import TechStack from "./components/Student/TechStack";
-import SocialLinks from "./components/Student/SoicalLinks";
-import Slots from "./components/Student/Slots";
 
 const router = createBrowserRouter([
   {
@@ -90,9 +83,9 @@ const router = createBrowserRouter([
         element: <Help />,
       },
       {
-        path: "/blogs",
+        path: "/Livechat",
         errorElement: <ErrorPage />,
-        element: <Blogs />,
+        element: <Livechat />,
       },
       {
         path: "/privacy-policy",
@@ -124,33 +117,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         element: <CollegePage />,
       },
-      {
-        path: "/student/:id/:name",
-        errorElement: <ErrorPage />,
-        element: <StudentLayout />,
-        children: [
-          {
-            path: "",
-            element: <StudentDefault />, // Default component
-          },
-          {
-            path: "achievements",
-            element: <Achievements />,
-          },
-          {
-            path: "tech-stack",
-            element: <TechStack />,
-          },
-          {
-            path: "social-links",
-            element: <SocialLinks />,
-          },
-          {
-            path: "available-slots",
-            element: <Slots />,
-          },
-        ],
-      },
+     
       {
         path: "/profile",
         errorElement: <ErrorPage />,
@@ -161,16 +128,8 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         element: <FAQs />,
       },
-      {
-        path: "/Contribute",
-        errorElement: <ErrorPage />,
-        element: <Contribute />,
-      },
-      {
-        path: "/blogwrite",
-        errorElement: <ErrorPage />,
-        element: <BlogWrite />,
-      },
+     
+     
      
     
     ],

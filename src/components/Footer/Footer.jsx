@@ -10,7 +10,6 @@ const Footer = () => {
           <ul className="link">
             <li><a onClick={()=>window.location.href="/about"}>About Us</a></li>
             <li><a onClick={()=>window.location.href="/blogs"} >Blog</a></li>
-            <li><a onClick={()=>window.location.href="/contribute"} >Our Contributors</a></li>
             <li><a onClick={()=>window.location.href="/join-us"} >Join Us</a></li>
             <li><a onClick={()=>window.location.href="/help"} >Help</a></li>
             <li><a onClick={()=>window.location.href="/contact"} >Contact Us</a></li>
