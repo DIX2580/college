@@ -7,6 +7,25 @@ import { auth } from "../../firebase/auth";
 import Navbar from "../Navbar/Navbar";
 import { motion } from "framer-motion";
 
+const CashfreeButton = () => (
+  <a href="https://payments.cashfree.com/forms/sucessdsa" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+    <div className="button-container" style={{ background: '#000', border: '1px solid black', borderRadius: '15px', display: 'flex', padding: '10px', width: 'fit-content', cursor: 'pointer' }}>
+      <div>
+        <img src="https://cashfree-checkoutcartimages-prod.cashfree.com/logoH8d8q8h2pv80_prod.png" alt="logo" className="logo-container" style={{ width: '40px', height: '40px' }} />
+      </div>
+      <div className="text-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: '10px', justifyContent: 'center', marginRight: '10px' }}>
+        <div style={{ fontFamily: 'Arial', color: '#fff', marginBottom: '5px', fontSize: '14px' }}>
+          Pay Now
+        </div>
+        <div style={{ fontFamily: 'Arial', color: '#fff', fontSize: '10px' }}>
+          <span>Powered By Cashfree</span>
+          <img src="https://cashfreelogo.cashfree.com/cashfreepayments/logosvgs/Group_4355.svg" alt="logo" className="seconday-logo-container" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />
+        </div>
+      </div>
+    </div>
+  </a>
+);
+
 const Courses = () => {
   const navigate = useNavigate();
 
@@ -22,7 +41,7 @@ const Courses = () => {
     <>
       <Navbar />
       <div className="courses-container">
-        <motion.h1 
+        <motion.h1
           className="courses-title"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -33,15 +52,15 @@ const Courses = () => {
         
         <div className="courses-list">
           {coursesData.map((course, index) => (
-            <motion.div 
-              className="course-card" 
+            <motion.div
+              className="course-card"
               key={course.id}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.05,
-                boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)" 
+                boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)"
               }}
             >
               <div className="course-image-container">
@@ -52,11 +71,12 @@ const Courses = () => {
                   loading="lazy"
                 />
                 <div className="course-overlay">
-                  <button className="enroll-button">Enroll Now</button>
+                  {/* Replace the button with the CashFree button */}
+                  <CashfreeButton />
                 </div>
               </div>
               
-              <motion.div 
+              <motion.div
                 className="course-info"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
