@@ -2,7 +2,7 @@
 1. Clone this repository to your local machine using:
 
    ```
-   git clone https://github.com/thestarsahil/Counsellor.git
+   https://github.com/DIX2580/college.git
    ```
 
 2. Navigate to the project directory:
