@@ -8,7 +8,7 @@
 2. Navigate to the project directory:
 
    ```
-   cd Counsellor
+   cd College
    ```
 
 3. Install the required dependencies using npm:
