@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect, useCallback } from "react";
 import studentsData from "./students.json";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { signOut } from "firebase/auth";
 import Navbar from "../Navbar/Navbar";
 import { auth } from "../../firebase/auth";
 import { Icon } from "@iconify/react";

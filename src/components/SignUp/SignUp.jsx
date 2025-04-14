@@ -1,5 +1,5 @@
-import { useState, useEffect,useCallback, useContext } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaEye,
   FaEyeSlash,
@@ -13,15 +13,10 @@ import {
   FaVenusMars,
   FaGraduationCap,
   FaUserTie,
-  FaShieldVirus,
-  FaSyncAlt,
 } from "react-icons/fa";
 import meeting2 from "../../assets/meeting2.png";
 import "./Signup.css";
-import { auth, database } from "../../firebase/auth";
-import { ref, set } from "firebase/database";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { uid } from "uid";
+import axios from "axios";
 import validate from "../../common/validation";
 import Footer from "../Footer/Footer";
 import { Switch } from "antd";
@@ -45,17 +40,15 @@ const SignUpForm = () => {
     password: "",
     confirmPassword: "",
   });
-  const [captchaVal, setCaptchaVal] = useState("");
-  const [captchaText, setCaptchaText] = useState("");
-  const handleCaptcha=useCallback((e)=>{
-    setCaptchaVal(e.target.value)
-  });
-  //password toggele
+  const [isLoading, setIsLoading] = useState(false);
+
+  //password toggle
   const passwordToggle = useCallback(() => {
     if (passwordType === "password") {
       setPasswordType("text");
     } else setPasswordType("password");
   });
+  
   const confirmPasswordToggle = useCallback(() => {
     if (confirmPasswordType === "password") {
       setConfirmPasswordType("text");
@@ -99,6 +92,7 @@ const SignUpForm = () => {
       return { ...prev, ...errObj };
     });
   });
+
   function generateUUID() {
     var d = new Date().getTime();
     var d2 =
@@ -119,49 +113,48 @@ const SignUpForm = () => {
     });
   }
 
-   function writeUserData (userId, email, userInfo) {
-    const { firstName, surname, dob, gender, age } = userInfo;
-    const user_type = userInfo["user-type"];
-    set(ref(database, "users/" + userId), {
-      id: userId,
-      firstname: firstName,
-      surname: surname,
-      email: email,
-      dob: dob,
-      gender: gender,
-      age: age,
-      user_type: user_type,
-    });
-   
+  // MongoDB function to write user data and authenticate
+  async function registerUserWithMongoDB(userInfo, email, password) {
+    try {
+      const userId = generateUUID();
+      
+      const userData = {
+        id: userId,
+        firstName: userInfo.firstName,
+        surname: userInfo.surname,
+        email: email,
+        password: password,
+        dob: new Date(userInfo.dob).toISOString(),
+        gender: userInfo.gender,
+        age: userInfo.age,
+        user_type: userInfo["user-type"]
+      };
+
+      // Make API call to your backend registration endpoint
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/register", 
+        userData
+      );
+
+      // Store JWT token and user data
+      if (response.status === 201) {
+        localStorage.setItem("mongoToken", response.data.token);
+        localStorage.setItem("mongoUser", JSON.stringify(response.data.user));
+        localStorage.setItem("userUid", userId);
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error("Registration error:", error);
+      throw error;
+    }
   }
 
   let navigate = useNavigate();
 
-  const generateCaptcha = useCallback(() => {
-    let captcha = "";
-    const charset =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (let i = 0; i < 6; i++) {
-      var randomIndex = Math.floor(Math.random() * charset.length);
-      captcha += charset.charAt(randomIndex);
-    }
-    setCaptchaText(captcha);
-  });
-
-  useEffect(() => {
-    generateCaptcha();
-  }, []);
-
   const handleRegister = useCallback(async (e) => {
     e.preventDefault();
     let submitable = true;
-    if (captchaVal !== captchaText) {
-      alert("Wrong Captcha");
-      setCaptchaVal("");
-      generateCaptcha();
-      return;
-    }
 
     Object.values(error).forEach((err) => {
       if (err !== false) {
@@ -171,24 +164,27 @@ const SignUpForm = () => {
     });
 
     if (submitable) {
-      const userId = generateUUID();
-    
+      setIsLoading(true);
       try {
-        const createUser = await createUserWithEmailAndPassword(
-          auth,
+        // Register user with MongoDB
+        await registerUserWithMongoDB(
+          userInfo,
           registerInformation.email,
           registerInformation.password
         );
-        const encodedEmail = registerInformation.email.replace(/[^a-zA-Z0-9]/g, '_');
-      const emailRef = ref(database, `email/${encodedEmail}`);
-      set(emailRef, userId);
-        localStorage.setItem("userUid", userId);
-        //save data only when user google verification is complete
-        writeUserData(userId, registerInformation.email, userInfo);
+        
+        // Navigate to home page after successful registration
         navigate("/");
       } catch (err) {
-        alert(err.message);
-        console.log(err);
+        // Handle errors
+        if (err.response && err.response.data) {
+          alert(err.response.data.message || "Registration failed");
+        } else {
+          alert(err.message || "Something went wrong. Please try again later.");
+        }
+        console.error("Registration error:", err);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       alert("Please fill all Fields with Valid Data.");
@@ -243,8 +239,6 @@ const SignUpForm = () => {
             <div className="signuptxt2">It's quick and easy.</div>
 
             <form className="form-container" onSubmit={handleRegister}>
-              {/* <div className="errorShow"> {error && <p>{error}</p>}</div> */}
-
               <div className="name">
                 <div className="iconContainer">
                   <input
@@ -382,7 +376,7 @@ const SignUpForm = () => {
                       type="text"
                       value={userInfo.age}
                       name="age"
-                      placeholder="Auto Generted"
+                      placeholder="Auto Generated"
                       readOnly
                     />
                     <FaHourglass className="icons" />
@@ -450,31 +444,13 @@ const SignUpForm = () => {
                   <FaUserTie className="icons" />
                 </div>
               </div>
-              <div id="captcha-container">
-                <label htmlFor="captcha">Captcha</label>
-                <div
-                  className="flex flex-row gap-3 justify-center items-center"
-                  id="captchaBox"
-                >
-                  <div id="captcha">{captchaText}</div>
-                  <FaSyncAlt id="captchaIcon" onClick={generateCaptcha} />
-                  <div className="iconContainer">
-                    <input
-                      type="text"
-                      name="captcha"
-                      value={captchaVal}
-                      placeholder="Enter Captcha Here"
-                      onChange={handleCaptcha}
-                      className="w-[100%] bg-slate-100 py-2 px-4 focus:outline-indigo-500"
-                      required
-                    />
-                    <FaShieldVirus className="icons" />
-                  </div>
-                </div>
-              </div>
               <div className="btn">
-                <button className="submit-button" type="submit">
-                  Sign Up
+                <button 
+                  className="submit-button" 
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Creating Account..." : "Sign Up"}
                 </button>
                 <div className="already-account">
                   <Link to="/">Already have an account?</Link>

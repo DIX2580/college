@@ -1,51 +1,39 @@
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { useEffect, useState, useCallback, useContext } from "react";
+import { useEffect, useState, useCallback, useContext, useRef } from "react";
 import Tilt from "react-parallax-tilt";
 import { Link, useNavigate } from "react-router-dom";
 import meeting2 from "../../assets/meeting.webp";
 import hide from "../../assets/hide.png";
 import show from "../../assets/show.png";
-import { auth, googleAuthProvider, database } from "../../firebase/auth";
-import { ref, get } from "firebase/database";
 import "./Login.css";
 import { FaEnvelope, FaKey } from "react-icons/fa";
 import validate from "../../common/validation";
 import Footer from "../Footer/Footer";
 import { ToastContainer, toast } from "react-toastify";
-import { Switch } from "antd";
 import { ThemeContext } from "../../App";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../action/action";
 import Navbar from "../Navbar/Navbar";
+import axios from "axios";
 
-const fetchUserDataByEmail = async (email) => {
+// API URL constants
+const API_BASE_URL = "http://localhost:5000/api";
+
+// Helper function to authenticate user with MongoDB backend
+const authenticateWithBackend = async (email, password) => {
   try {
-    // Get the user ID using the email
-    const encodedEmail = email.replace(/[^a-zA-Z0-9]/g, "_");
-    const emailRef = ref(database, `email/${encodedEmail}`);
-    const emailSnapshot = await get(emailRef);
-    if (emailSnapshot.exists()) {
-      const userId = emailSnapshot.val();
-      const userRef = ref(database, `users/${userId}`);
-      const userSnapshot = await get(userRef);
-      if (userSnapshot.exists()) {
-        const userData = userSnapshot.val();
-        return userData;
-      } else {
-        console.error("No user data available");
-        return null;
-      }
-    } else {
-      console.error("No user ID found for the provided email");
-      return null;
-    }
+    // Regular email/password login
+    const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+      email,
+      password
+    });
+    
+    return response.data;
   } catch (error) {
-    console.error("Error fetching user data:", error);
-    return null;
+    console.error("MongoDB authentication error:", error);
+    throw error;
   }
 };
 
-//extra started
 // Animated Background Component
 const AnimatedBackground = ({ children }) => {
   const geometricBackgroundRef = useCallback((node) => {
@@ -121,8 +109,11 @@ const AnimatedBackground = ({ children }) => {
         const shapeX = parseFloat(shape.style.left);
         const shapeY = parseFloat(shape.style.top);
         
-        shape.style.left = `${shapeX + (x - 0.5) * speed}%`;
-        shape.style.top = `${shapeY + (y - 0.5) * speed}%`;
+        // Check for valid numbers to prevent NaN errors
+        if (!isNaN(shapeX) && !isNaN(shapeY)) {
+          shape.style.left = `${shapeX + (x - 0.5) * speed}%`;
+          shape.style.top = `${shapeY + (y - 0.5) * speed}%`;
+        }
       });
     };
     
@@ -147,7 +138,7 @@ const AnimatedBackground = ({ children }) => {
     </div>
   );
 };
-//extra 
+
 export default function Login() {
   const [error, setError] = useState({});
   const [passwordType, setPasswordType] = useState("password");
@@ -155,25 +146,23 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFormValidated, setIsFormValidated] = useState(false);
   
-  const formRef = useCallback(node => {
-    // Ref for form element to programmatically submit
-    if (node !== null) {
-      formRef.current = node;
-    }
-  }, []);
+  // Proper ref implementation
+  const formRef = useRef(null);
 
   // Function for handling inputs
   const handleLoginInfo = useCallback(
     (e) => {
       const { name, value } = e.target;
-      let errObj;
+      let errObj = {};
 
       // Validate based on input name
       if (name === "password") {
         errObj = validate.loginPassword(value);
-      } else {
-        errObj = validate[name](value);
+      } else if (name === "email") {
+        errObj = validate.email(value);
       }
 
       // Update loginInfo and error state
@@ -185,155 +174,185 @@ export default function Login() {
         ...prev,
         ...errObj,
       }));
+      
+      // Check if the form is valid after input changes
+      const updatedLoginInfo = { ...loginInfo, [name]: value };
+      const isValid = updatedLoginInfo.email && updatedLoginInfo.password && 
+                      !errObj.emailError && !error.passwordError;
+      setIsFormValidated(isValid);
     },
-    []
+    [error, loginInfo]
   );
 
   const passwordToggle = useCallback(() => {
-    if (passwordType === "password") {
-      setPasswordType("text");
-    } else setPasswordType("password");
-  }, [passwordType]);
+    setPasswordType((prevType) => (prevType === "password" ? "text" : "password"));
+  }, []);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
+  // Check for existing session on component mount
   useEffect(() => {
-    auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        console.log(user);
-        const userData = await fetchUserDataByEmail(user.email);
-
-        dispatch(loginSuccess(userData));
-
-        localStorage.setItem("userUid", userData.id);
-        
-        toast.success("Authenticating your credentials… 🚀", {
-          className: "toast-message",
-        });
-        localStorage.setItem("login", true);
-        localStorage.setItem("count", true);
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 2000);
-      }
-    });
-  }, [navigate, dispatch]);
-
-  const fetchUserData = async (uid) => {
-    const userRef = ref(database, `users/${uid}`);
-    const snapshot = await get(userRef);
-    if (snapshot.exists()) {
-      const userData = snapshot.val();
-      localStorage.setItem("Userid", userData.id);
-      return userData;
-    } else {
-      console.error("No data available");
-      return null;
-    }
-  };
-
-  // if signin with EmailId/password success then navigate to /dashboard
-  const handleSignIn = useCallback((e) => {
-    e.preventDefault();
-    let submitable = true;
-
-    Object.values(error).forEach((err) => {
-      if (err !== false) {
-        submitable = false;
-        return;
-      }
-    });
-    
-    if (submitable) {
-      signInWithEmailAndPassword(auth, loginInfo.email, loginInfo.password)
-        .then(async () => {
-          toast.success("Login successful!", {
-            className: "toast-message",
+    const checkExistingSession = async () => {
+      const token = localStorage.getItem("mongoToken");
+      const login = localStorage.getItem("login");
+      
+      if (token && login === "true") {
+        try {
+          // Verify token with backend
+          const response = await axios.get(`${API_BASE_URL}/auth/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           });
           
-          setTimeout(async () => {
-            const user = localStorage.getItem("userUid");
-            const response = await fetchUserData(user); // Fetch user data after login
-            console.log("response user", response);
-            dispatch(loginSuccess(response));
-            localStorage.setItem("login", true);
+          if (response.data) {
+            // Store user data
+            localStorage.setItem("mongoUser", JSON.stringify(response.data));
+            
+            // Update Redux store
+            dispatch(loginSuccess(response.data));
+            
+            // Redirect after successful verification
             navigate("/dashboard");
-          }, 2000);
-        })
-        .catch((err) => {
-          if (err.code === "auth/wrong-password") {
-            toast.error("Incorrect Password!", {
-              className: "toast-message",
-            });
-          } else if (err.code === "auth/user-not-found") {
-            toast.error("This email is not registered", {
-              className: "toast-message",
-            });
-          } else {
-            console.error("Sign-in error", err);
-            toast.error("An error occurred. Please try again!", {
-              className: "toast-message",
-            });
           }
-        });
-    } else {
-      toast.error("Please fill all Fields with Valid Data.", {
-        className: "toast-message",
-      });
-    }
-  }, [error, loginInfo, dispatch, navigate, fetchUserData]);
-  
-  // Popup Google signin
-  const SignInGoogle = useCallback(() => {
-    signInWithPopup(auth, googleAuthProvider)
-      .then(() => {
-        toast.success("Login successful!", {
-          className: "toast-message",
-        });
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 2000);
-      })
-      .catch((err) =>
-        toast.error(err.message, {
-          className: "toast-message",
-        })
-      );
-  }, [navigate]);
+        } catch (error) {
+          // Token invalid or expired, clear localStorage
+          localStorage.removeItem("mongoToken");
+          localStorage.removeItem("mongoUser");
+          localStorage.removeItem("login");
+          localStorage.removeItem("userUid");
+          console.error("Session verification failed:", error);
+        }
+      }
+    };
+    
+    checkExistingSession();
+  }, [navigate, dispatch]);
 
-  // Guest login function
-  const handleGuestLogin = useCallback((e) => {
+  // Email/Password Sign In handler
+  const handleSignIn = useCallback(async (e) => {
     e.preventDefault();
     
-    // Set guest credentials
-    setLoginInfo({
-      email: "Guest@Guest.com",
-      password: "Guest@123"
-    });
+    // Prevent double submission
+    if (isLoading) return;
     
-    // Add small delay to ensure state is updated before submitting
-    setTimeout(() => {
-      signInWithEmailAndPassword(auth, "Guest@Guest.com", "Guest@123")
-        .then(() => {
-          toast.success("Guest login successful!", {
-            className: "toast-message",
-          });
-          setTimeout(() => {
-            localStorage.setItem("login", true);
-            navigate("/dashboard");
-          }, 2000);
-        })
-        .catch((err) => {
-          console.error("Guest login error", err);
-          toast.error("Guest login failed. Please try again!", {
-            className: "toast-message",
-          });
+    setIsLoading(true);
+    
+    // Check form validity
+    if (!loginInfo.email || !loginInfo.password) {
+      toast.error("Please enter both email and password.", {
+        className: "toast-message",
+      });
+      setIsLoading(false);
+      return;
+    }
+    
+    // Check for validation errors
+    if (error.emailError || error.passwordError) {
+      toast.error("Please fix validation errors before submitting.", {
+        className: "toast-message",
+      });
+      setIsLoading(false);
+      return;
+    }
+    
+    try {
+      // MongoDB Authentication
+      const authData = await authenticateWithBackend(
+        loginInfo.email, 
+        loginInfo.password
+      );
+      
+      // Store the JWT token and user from MongoDB backend
+      if (authData.token) {
+        localStorage.setItem("mongoToken", authData.token);
+        localStorage.setItem("mongoUser", JSON.stringify(authData.user));
+        localStorage.setItem("login", "true");
+        localStorage.setItem("userUid", authData.user._id);
+        
+        // Update Redux store
+        dispatch(loginSuccess(authData.user));
+        
+        // Success notification
+        toast.success("Login successful! Redirecting to dashboard...", {
+          className: "toast-message",
         });
-    }, 100);
-  }, [navigate]);
+        
+        // Redirect to dashboard after a brief delay to show the toast
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
+      } else {
+        throw new Error("No token received from server");
+      }
+    } catch (err) {
+      // Handle different error types
+      if (err.response && err.response.status === 401) {
+        toast.error("Incorrect email or password!", {
+          className: "toast-message",
+        });
+      } else if (err.response && err.response.status === 404) {
+        toast.error("This email is not registered", {
+          className: "toast-message",
+        });
+      } else {
+        console.error("Sign-in error", err);
+        toast.error(err.response?.data?.message || "Login failed. Please try again!", {
+          className: "toast-message",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [error, loginInfo, dispatch, navigate, isLoading]);
 
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  // Guest Login handler
+  const handleGuestLogin = useCallback(async (e) => {
+    e.preventDefault();
+    
+    // Prevent double submission
+    if (isLoading) return;
+    
+    setIsLoading(true);
+    
+    try {
+      // Try backend guest login
+      const response = await axios.get(`${API_BASE_URL}/auth/guest-login`);
+      
+      if (response.data && response.data.token) {
+        // Save MongoDB token and user data
+        localStorage.setItem("mongoToken", response.data.token);
+        localStorage.setItem("mongoUser", JSON.stringify(response.data.user));
+        localStorage.setItem("login", "true");
+        localStorage.setItem("userUid", response.data.user._id);
+        
+        // Update Redux store with guest user data
+        dispatch(loginSuccess(response.data.user));
+        
+        // Success notification
+        toast.success("Guest login successful! Redirecting to dashboard...", {
+          className: "toast-message",
+        });
+        
+        // Redirect to dashboard after a brief delay to show the toast
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
+      } else {
+        throw new Error("Invalid response from server");
+      }
+    } catch (err) {
+      console.error("Guest login error:", err);
+      toast.error("Guest login failed. Please try again!", {
+        className: "toast-message",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [navigate, dispatch, isLoading]);
+
+  const { theme } = useContext(ThemeContext);
 
   return (
     <div className="app-container">
@@ -343,7 +362,7 @@ export default function Login() {
           <div className="login-container">
             <div className="parent">
               {/* This is the right side of the login page */}
-              <ToastContainer />
+              <ToastContainer position="top-right" autoClose={3000} />
               <div className="right">
                 <h1 className="counsellor"></h1>
                 <div className="sign-in">Log in to your account</div>
@@ -355,18 +374,20 @@ export default function Login() {
                     <div className="iconContainer">
                       <input
                         id="email"
-                        type="text"
+                        type="email"
                         name="email"
                         onChange={handleLoginInfo}
                         value={loginInfo.email}
-                        placeholder="Email"
+                        placeholder="Enter your email"
                         required
-                        className={`${error.emailError && "inputField"}`}
+                        className={`${error.emailError ? "inputField" : ""}`}
+                        disabled={isLoading}
+                        autoComplete="email"
                       />
                       <FaEnvelope className="icons" />
                     </div>
 
-                    {error.email && error.emailError && (
+                    {error.emailError && (
                       <p className="errorShow">{error.emailError}</p>
                     )}
                   </div>
@@ -381,8 +402,10 @@ export default function Login() {
                           onChange={handleLoginInfo}
                           value={loginInfo.password}
                           required
-                          placeholder="Password"
-                          className={`${error.passwordError && "inputField"}`}
+                          placeholder="Enter your password"
+                          className={`${error.passwordError ? "inputField" : ""}`}
+                          disabled={isLoading}
+                          autoComplete="current-password"
                         />
                         <FaKey className="icons" />
                         <div onClick={passwordToggle} className="toggle-button">
@@ -393,20 +416,25 @@ export default function Login() {
                             alt="password-toggle"
                           />
                         </div>
-                        {error.password && error.passwordError && (
-                          <p className="errorShow">{error.passwordError}</p>
-                        )}
                       </div>
+                      {error.passwordError && (
+                        <p className="errorShow">{error.passwordError}</p>
+                      )}
                     </div>
                   </div>
                   <div className="remember-me">
                     <input type="checkbox" id="remember-me" />
                     <label htmlFor="remember-me"> Remember me</label>
                   </div>
-                  <button className="login_btn" type="submit">
-                    Login
+                  <button 
+                    className="login_btn" 
+                    type="submit" 
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Logging in..." : "Login"}
                   </button>
                 </form>
+
                 <div className="btn">
                   <Link to="/forgotpassword" className="forgot-password">
                     Forgot Your password?
@@ -422,8 +450,10 @@ export default function Login() {
                     onClick={handleGuestLogin} 
                     className="forgot-password" 
                     style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', color: 'inherit' }}
+                    disabled={isLoading}
+                    type="button"
                   >
-                    Guest Login
+                    {isLoading ? "Connecting..." : "Guest Login"}
                   </button>
                 </div>
                 <div className="get-app">
@@ -432,7 +462,7 @@ export default function Login() {
               </div>
               {/* This is the left side of the login page */}
               <div className="left">
-                <Tilt>
+                <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05}>
                   <img src={meeting2} alt="meeting" />
                 </Tilt>
               </div>

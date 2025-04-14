@@ -1,12 +1,14 @@
 import { useEffect, useState, useCallback, useContext } from "react";
-import { signOut } from "firebase/auth";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "../../assets/logo.webp";
-import { auth } from "../../firebase/auth";
 import { ThemeContext } from "../../App";
 import { toast } from "react-toastify";
 import "./Navbar.css";
+import axios from "axios";
+
+// API URL constants
+const API_BASE_URL = "http://localhost:5000/api";
 
 // Navbar Component
 const Navbar = ({ isLoginPage }) => {
@@ -16,44 +18,52 @@ const Navbar = ({ isLoginPage }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const [login, setLogin] = useState(localStorage.getItem("login") || "");
+  const [login, setLogin] = useState(localStorage.getItem("login") === "true");
 
   // If isLoginPage is not explicitly provided, check the current path
   const isLoginPagePath = isLoginPage || location.pathname === "/login";
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      const storedLogin = localStorage.getItem("login");
-      setLogin(storedLogin);
-    }, 1000); // Check every second
-
+    const checkLoginStatus = () => {
+      const loginStatus = localStorage.getItem("login") === "true";
+      setLogin(loginStatus);
+      
+      if (loginStatus) {
+        const userData = JSON.parse(localStorage.getItem("mongoUser") || "null");
+        setUser(userData);
+      } else {
+        setUser(null);
+      }
+    };
+    
+    // Check immediately on component mount
+    checkLoginStatus();
+    
+    // Set up interval to check periodically
+    const intervalId = setInterval(checkLoginStatus, 1000);
+    
     return () => clearInterval(intervalId);
   }, []);
 
-  useEffect(() => {
-    if (login) {
-      auth.onAuthStateChanged((user) => {
-        if (user) {
-          setUser(user);
-        } else {
-          setUser(null);
-          navigate("/");
-        }
+  const handleSignOut = useCallback(() => {
+    try {
+      // Clear all authentication data
+      localStorage.removeItem("mongoToken");
+      localStorage.removeItem("mongoUser");
+      localStorage.removeItem("login");
+      localStorage.removeItem("userUid");
+      
+      setUser(null);
+      navigate("/");
+      
+      toast.success("Logged out successfully", {
+        className: "toast-message",
+      });
+    } catch (err) {
+      toast.error("Error signing out", {
+        className: "toast-message",
       });
     }
-  }, [navigate, login]);
-
-  const handleSignOut = useCallback(() => {
-    signOut(auth)
-      .then(() => {
-        localStorage.removeItem("login");
-        navigate("/");
-      })
-      .catch((err) => {
-        toast.error(err.message, {
-          className: "toast-message",
-        });
-      });
   }, [navigate]);
 
   const toggleMenu = useCallback(() => {
@@ -227,7 +237,7 @@ const DesktopMenu = ({ user, handleSignOut }) => {
                 {user.photoURL ? (
                   <img src={user.photoURL} alt="Profile" className="user-avatar" />
                 ) : (
-                  <span className="user-initial">{user.displayName ? user.displayName.charAt(0) : 'U'}</span>
+                  <span className="user-initial">{user.firstName ? user.firstName.charAt(0) : 'U'}</span>
                 )}
               </motion.div>
             </Link>
@@ -370,83 +380,78 @@ const MobileMenu = ({ user, handleSignOut, theme, toggleTheme, closeMenu }) => {
       
       <div className="mobile-menu-container">
         <div className="mobile-menu-items">
-          {user && (
-            <motion.div variants={itemVariants} className="mobile-user-profile">
-              <div className="mobile-profile-icon">
-                {user.photoURL ? (
-                  <img src={user.photoURL} alt="Profile" className="user-avatar" />
-                ) : (
-                  <span className="user-initial">{user.displayName ? user.displayName.charAt(0) : 'U'}</span>
-                )}
-              </div>
-              <div className="mobile-profile-info">
-                <p className="mobile-user-name">{user.displayName || user.email}</p>
-                <Link to="/profile" className="mobile-profile-link" onClick={closeMenu}>
-                  View Profile
-                </Link>
-              </div>
+        {user && (
+            <motion.div variants={itemVariants} className="mobile-menu-user-section">
+              <Link to="/profile" className="mobile-user-profile" onClick={closeMenu}>
+                <div className="mobile-avatar">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt="Profile" className="user-avatar" />
+                  ) : (
+                    <span className="user-initial">{user.firstName ? user.firstName.charAt(0) : 'U'}</span>
+                  )}
+                </div>
+                <div className="mobile-user-info">
+                  <p className="mobile-user-name">{user.firstName} {user.lastName}</p>
+                  <p className="mobile-user-email">{user.email}</p>
+                </div>
+              </Link>
             </motion.div>
           )}
-          
+
           {menuItems.map((item, index) => (
-            <motion.div key={index} variants={itemVariants} className="mobile-menu-item-wrapper">
-              <Link
-                to={item.href}
-                className="mobile-menu-item"
+            <motion.div key={index} variants={itemVariants}>
+              <Link 
+                to={item.href} 
+                className="mobile-menu-item" 
                 onClick={closeMenu}
               >
-                <span className="mobile-menu-icon">{item.icon}</span>
-                {item.name}
-                <span className="mobile-menu-arrow">›</span>
+                <span className="menu-item-icon">{item.icon}</span>
+                <span className="menu-item-text">{item.name}</span>
               </Link>
             </motion.div>
           ))}
           
           {user ? (
-            <motion.div variants={itemVariants} className="mobile-menu-item-wrapper">
-              <a
+            <motion.div variants={itemVariants}>
+              <button 
                 onClick={() => {
                   handleSignOut();
                   closeMenu();
-                }}
-                className="mobile-menu-item mobile-logout"
+                }} 
+                className="mobile-menu-item logout-button"
               >
-                <span className="mobile-menu-icon">🚪</span>
-                Log Out
-              </a>
+                <span className="menu-item-icon">🚪</span>
+                <span className="menu-item-text">Log Out</span>
+              </button>
             </motion.div>
           ) : (
-            <motion.div variants={itemVariants} className="mobile-menu-item-wrapper">
-              <Link
-                to="/login"
-                className="mobile-menu-item mobile-login"
-                onClick={closeMenu}
-              >
-                <span className="mobile-menu-icon">🔑</span>
-                Login
+            <motion.div variants={itemVariants}>
+              <Link to="/" className="mobile-menu-item" onClick={closeMenu}>
+                <span className="menu-item-icon">🔑</span>
+                <span className="menu-item-text">Login</span>
               </Link>
             </motion.div>
           )}
-          
-          <motion.div variants={itemVariants} className="theme-toggle-container">
-            <div className="theme-toggle-wrapper">
-              <span className="theme-label">
-                {theme === "dark" ? "Dark Mode" : "Light Mode"}
-              </span>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={toggleTheme}
-                className="mobile-theme-toggle"
-                aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-              >
-                <div className={`toggle-track ${theme === "dark" ? "dark" : "light"}`}>
-                  <div className="toggle-thumb"></div>
-                </div>
-              </motion.button>
-            </div>
-          </motion.div>
         </div>
+        
+        <motion.div variants={itemVariants} className="mobile-theme-toggle">
+          <span>Theme: {theme === "dark" ? "Dark" : "Light"}</span>
+          <button 
+            onClick={toggleTheme}
+            className="mobile-theme-button"
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {theme === "dark" ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="theme-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="theme-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            )}
+          </button>
+        </motion.div>
       </div>
     </motion.div>
   );
