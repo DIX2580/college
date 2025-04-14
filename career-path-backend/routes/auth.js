@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { protect } = require('../middleware/authMiddleware');
 require('dotenv').config();
 
 // Helper function to generate JWT
@@ -20,16 +21,17 @@ const generateToken = (userId) => {
 router.post('/register', async (req, res) => {
   try {
     console.log('Registration request body:', req.body);
-    const { firstName, surname, email, password, dob, gender, age, user_type, firebaseUid } = req.body;
+    const { firstName, surname, email, password, dob, gender, age, user_type } = req.body;
     
     // Validate required fields
-    if (!firstName || !surname || !email) {
+    if (!firstName || !surname || !email || !password) {
       return res.status(400).json({ 
         message: 'Missing required fields',
         details: {
           firstName: !firstName ? 'First name is required' : undefined,
           surname: !surname ? 'Surname is required' : undefined,
-          email: !email ? 'Email is required' : undefined
+          email: !email ? 'Email is required' : undefined,
+          password: !password ? 'Password is required' : undefined
         }
       });
     }
@@ -37,25 +39,6 @@ router.post('/register', async (req, res) => {
     // Check if user with this email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      // If user exists but doesn't have firebaseUid yet, update it
-      if (firebaseUid && !existingUser.firebaseUid) {
-        existingUser.firebaseUid = firebaseUid;
-        await existingUser.save();
-        
-        // Generate token
-        const token = generateToken(existingUser._id);
-        
-        // Return user data without password
-        const userData = existingUser.toObject();
-        delete userData.password;
-        
-        return res.json({
-          token,
-          user: userData,
-          message: 'User updated with Firebase UID'
-        });
-      }
-      
       return res.status(409).json({ message: 'User with this email already exists' });
     }
     
@@ -64,12 +47,11 @@ router.post('/register', async (req, res) => {
       firstName,
       surname,
       email,
-      password: password || undefined, // Only set if provided
+      password,
       dob,
       gender,
       age,
-      user_type,
-      firebaseUid
+      user_type
     });
     
     await user.save();
@@ -142,57 +124,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Firebase auth verification
-router.post('/firebase-auth', async (req, res) => {
-  try {
-    const { email, firebaseUid } = req.body;
-    
-    if (!email || !firebaseUid) {
-      return res.status(400).json({ message: 'Email and Firebase UID are required' });
-    }
-    
-    // Find user by email
-    let user = await User.findOne({ email });
-    
-    // If user doesn't exist, create a new one
-    if (!user && req.body.createUser) {
-      const { firstName, surname, dob, gender, age, user_type } = req.body;
-      
-      user = new User({
-        firstName,
-        surname,
-        email,
-        firebaseUid,
-        dob: dob || new Date(),
-        gender: gender || 'Other',
-        age: age || 18,
-        user_type: user_type || 'student'
-      });
-      
-      await user.save();
-    } else if (user && !user.firebaseUid) {
-      // Update existing user with Firebase UID
-      user.firebaseUid = firebaseUid;
-      await user.save();
-    }
-    
-    if (!user) {
-      return res.status(404).json({ message: 'User not found and creation not requested' });
-    }
-    
-    // Generate token
-    const token = generateToken(user._id);
-    
-    res.json({
-      token,
-      user
-    });
-  } catch (error) {
-    console.error('Error in Firebase auth:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
-
 // Get user by token (for authentication verification)
 router.get('/me', async (req, res) => {
   try {
@@ -257,6 +188,50 @@ router.get('/guest-login', async (req, res) => {
     });
   } catch (error) {
     console.error('Error in guest login:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Update user profile information
+router.patch('/update-profile', protect, async (req, res) => {
+  try {
+    const { firstName, surname, bio, gender, dob, age, profilePicture } = req.body;
+    
+    // Find user by ID from token
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Update fields if provided
+    if (firstName) user.firstName = firstName;
+    if (surname) user.surname = surname;
+    if (bio) user.bio = bio;
+    if (gender) user.gender = gender;
+    if (dob) user.dob = new Date(dob);
+    if (age) user.age = parseInt(age);
+    if (profilePicture) user.profilePicture = profilePicture;
+    
+    // Save updated user
+    await user.save();
+    
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        surname: user.surname,
+        email: user.email,
+        bio: user.bio,
+        gender: user.gender,
+        dob: user.dob,
+        age: user.age,
+        profilePicture: user.profilePicture,
+        user_type: user.user_type
+      }
+    });
+  } catch (error) {
+    console.error('Error updating profile:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });

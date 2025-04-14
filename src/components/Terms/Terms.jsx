@@ -68,17 +68,17 @@ useEffect(() => {
           <section>
             <h2>License</h2>
             <p>
-              By accessing and using Counsellor, you agree to comply with our licensing terms. 
+              By accessing and using Career-path-guideline, you agree to comply with our licensing terms. 
               These terms ensure the protection of our intellectual property and maintain the 
               integrity of our content. We grant you a limited, non-exclusive, non-transferable 
               license to access and use our website for personal, non-commercial purposes.
             </p>
             <p>Unless explicitly stated, you are not permitted to:</p>
             <ul>
-              <li>Republish material from Counsellor</li>
-              <li>Sell, rent or sub-license material from Counsellor</li>
-              <li>Reproduce, duplicate or copy material from Counsellor</li>
-              <li>Redistribute content from Counsellor</li>
+              <li>Republish material from Career-path-guideline</li>
+              <li>Sell, rent or sub-license material from Career-path-guideline</li>
+              <li>Reproduce, duplicate or copy material from Career-path-guideline</li>
+              <li>Redistribute content from Career-path-guideline</li>
             </ul>
           </section>
           
@@ -108,7 +108,7 @@ useEffect(() => {
           <section>
             <h2>Content Liability</h2>
             <p>
-              While we strive to provide accurate and up-to-date information, Counsellor does not 
+              While we strive to provide accurate and up-to-date information, Career-path-guideline does not 
               warrant that the content on our website is complete, reliable, or error-free. We are 
               not liable for any inaccuracies, errors, or omissions in the content. Users are 
               responsible for verifying any information before relying on it. The content is provided 

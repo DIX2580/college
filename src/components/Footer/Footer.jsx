@@ -27,7 +27,7 @@ const Footer = () => {
             </p>
           </div>
           <ul className="social-icons">
-            <li><a href="https://github.com/Counselllor/Counsellor-Web" target="_blank" rel="noreferrer"><FaGithub /></a></li>
+            <li><a href="https://github.com/DIX2580" target="_blank" rel="noreferrer"><FaGithub /></a></li>
             <li><a href="https://discord.com" target="_blank" rel="noreferrer"><FaDiscord /></a></li>
             <li><a href="https://www.instagram.com/" target="_blank" rel="noreferrer"><FaInstagram /></a></li>
             <li><a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><FaFacebook /></a></li>

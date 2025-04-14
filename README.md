@@ -30,7 +30,7 @@
    npm run dev
    ```
 
-7. Open your web browser and visit `http://localhost:5173` to access the Counsellor application.
+7. Open your web browser and visit `http://localhost:5173` to access the Career Path guideline application.
 
 <hr>
 

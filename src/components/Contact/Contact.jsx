@@ -84,7 +84,7 @@ const Contact = () => {
             Email, call or complete the form to learn how Counsellor can solve
             your problem{" "}
           </p>
-          <span>Counsellor@gmail.com</span>
+          <span>dibyanjayapanda25@gmail.com</span>
           <span>xxxxx-xxxxx</span>
           <div className="customer" style={{ display: "flex", gap: "20px" }}>
             <div className="left1">

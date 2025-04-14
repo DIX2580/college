@@ -116,7 +116,7 @@ const Privacy = () => {
 
            <h3 className="sub-title">Contact Us</h3>
           <p>
-          If you have any questions or comments about this policy, you may email us at <a href="mailto:counsellorweb@support.com">counsellorweb@support.com</a>
+          If you have any questions or comments about this policy, you may email us at <a href="mailto:dibyanjayapanda25@@gmail.com">dibyanjayapanda25@@gmail.com</a>
           </p>
       </div>
       </div>

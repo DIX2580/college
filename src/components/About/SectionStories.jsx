@@ -36,7 +36,7 @@ const SectionStories = () => (
         altText="Person on a Tour"
         caption="Jaden Smith"
         heading="I got the best college with their guidance"
-        text="The counsellors at Counsellor-Web are committed to helping clients achieve their goals. I've gained valuable insights and coping strategies"
+        text="The Career-path-guidelines at Career-path-guideline-Web are committed to helping clients achieve their goals. I've gained valuable insights and coping strategies"
       />
     </div>
 
@@ -46,7 +46,7 @@ const SectionStories = () => (
         altText="Person on a Tour"
         caption="Jack Wilson"
         heading="Wow! My life is completely different now"
-        text="Highly recommend Counsellor-Web for anyone seeking professional counseling. They helped me navigate through a difficult time with empathy and expertise"
+        text="Highly recommend Career-path-guideline-Web for anyone seeking professional counseling. They helped me navigate through a difficult time with empathy and expertise"
       />
     </div>
   </section>
