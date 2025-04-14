@@ -20,16 +20,24 @@ export default function Iridescence() {
   const [isClassDropdownOpen, setIsClassDropdownOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [user, setUser] = useState(null);
 
   // Backend URL - should be in your environment variables in production
   const API_URL = 'http://localhost:5000/api/user-career';
+
+  useEffect(() => {
+    // Check if user is logged in
+    const userData = JSON.parse(localStorage.getItem("mongoUser") || "null");
+    const token = localStorage.getItem("mongoToken");
+    setUser(userData);
+  }, []);
 
   const classOptions = ["5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th","B.Tech","Bsc","BE","BCA","BA","BFA","B.Des","BJMC",
     "BBA","Bcom","BMS","MBBS","BDS","BPharma","BPT","BSC Nursing","LLB","BSW","Diploma","Foreign Engineering Degree","BHM","BTTM",];
   const sectorOptions = ["Private Sector", "Public Sector", "Don't Know"];
   
   const privatePaths = [
-   "DevOps Engineering",
+  "DevOps Engineering",
    "Full-Stack Development",
    "UI/UX Design",
    "Information Technology (IT)",
@@ -138,7 +146,7 @@ export default function Iridescence() {
   ];
   
   const publicPaths = [
-    "IES (Indian Engineering Services)",
+  "IES (Indian Engineering Services)",
     "IAS (Indian Administrative Service)",
     "IPS (Indian Police Service)",
     "IFS (Indian Foreign Service)",
@@ -256,20 +264,43 @@ export default function Iridescence() {
       setIsSubmitting(true);
       setErrorMessage('');
       
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
+      // Get auth token if user is logged in
+      const token = localStorage.getItem("mongoToken");
+      const headers = {
+        'Content-Type': 'application/json',
+      };
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to save data');
+      // Add authorization header if token exists
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+        // Use authenticated endpoint if user is logged in
+        const response = await fetch(`${API_URL}/authenticated`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(userData),
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to save data');
+        }
+        
+        return await response.json();
+      } else {
+        // Use regular endpoint for guests
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(userData),
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to save data');
+        }
+        
+        return await response.json();
       }
-      
-      return await response.json();
     } catch (error) {
       console.error('Error saving data to database:', error);
       setErrorMessage(`Failed to save data: ${error.message}`);
@@ -280,8 +311,12 @@ export default function Iridescence() {
   };
 
   const handleSeePathsClick = async () => {
+    // Get the user ID if available
+    const userId = user?._id || null;
+    
     // Prepare user data
     const userData = {
+      userId,
       currentClass: selectedClass,
       sector: selectedSector,
       dreamJob: dreamJob || searchQuery
@@ -308,8 +343,12 @@ export default function Iridescence() {
     
     // Redirect to livechat if "Don't Know" is selected
     if (sector === "Don't Know") {
+      // Get the user ID if available
+      const userId = user?._id || null;
+      
       // Prepare user data
       const userData = {
+        userId,
         currentClass: selectedClass,
         sector: sector,
         dreamJob: ""

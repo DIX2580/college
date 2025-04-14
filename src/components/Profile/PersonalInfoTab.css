@@ -1,0 +1,97 @@
+/* PersonalInfoTab.css */
+.personal-info-tab {
+    padding: 0.5rem;
+  }
+  
+  /* Form Styling */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--text-color);
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    background-color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    transition: var(--transition);
+  }
+  
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
+  }
+  
+  input:disabled {
+    background-color: var(--gray-100);
+    cursor: not-allowed;
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .save-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .save-btn:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  /* User Details Styling */
+  .user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .detail-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-light);
+  }
+  
+  .detail-value {
+    font-size: 1rem;
+    color: var(--text-color);
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }

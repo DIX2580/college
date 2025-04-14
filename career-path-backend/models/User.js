@@ -23,13 +23,10 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    // Only require password if there's no firebaseUid
     required: function() {
-      // If this is a new user with no firebaseUid, require password
-      // If this is an existing user being updated, don't require password
       return !this.firebaseUid && this.isNew;
     },
-    select: false, // Don't include password in query results by default
+    select: false,
   },
   dob: {
     type: Date,
@@ -48,6 +45,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['student', 'counsellor'],
     required: true,
+  },
+  profilePicture: {
+    type: String,
+    default: '',
+  },
+  resume: {
+    type: String,
+    default: '',
+  },
+  skills: [{
+    type: String
+  }],
+  bio: {
+    type: String,
+    default: '',
   },
   createdAt: {
     type: Date,

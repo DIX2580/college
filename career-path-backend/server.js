@@ -6,6 +6,8 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const userCareerRoutes = require('./routes/userCareer');
 const authRoutes = require('./routes/auth');
+const courseRoutes = require('./routes/courses');
+const socialProfileRoutes = require('./routes/socialProfiles'); // Add this line
 
 // Initialize express app
 const app = express();
@@ -26,6 +28,8 @@ console.log('- JWT Secret:', process.env.JWT_SECRET ? 'Set (hidden for security)
 // Routes
 app.use('/api/user-career', userCareerRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/social-profiles', socialProfileRoutes); // Add this line
 
 // Basic route
 app.get('/', (req, res) => {

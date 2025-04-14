@@ -1,16 +1,40 @@
 import React, { useState, useEffect } from "react";
 import "./SocialProfile.css";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../firebase/auth";
-import {
-  getDatabase,
-  ref,
-  set,
-  get,
-  child,
-  update,
-  remove,
-} from "firebase/database";
+import axios from "axios"; // You'll need to install axios if not already installed
+
+const socialMediaOptions = [
+  "Twitter",
+  "LinkedIn",
+  "Behance",
+  "Facebook",
+  "Instagram",
+  "Github",
+  "LeetCode",
+  "CodeForces",
+  "HackerEarth",
+  "HackerRank",
+];
+
+function generateUUID() {
+  var d = new Date().getTime();
+  var d2 =
+    (typeof performance !== "undefined" &&
+      performance.now &&
+      performance.now() * 1000) ||
+    0;
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16;
+    if (d > 0) {
+      r = (d + r) % 16 | 0;
+      d = Math.floor(d / 16);
+    } else {
+      r = (d2 + r) % 16 | 0;
+      d2 = Math.floor(d2 / 16);
+    }
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
 
 const initialProfiles = [
   {
@@ -30,19 +54,6 @@ const initialProfiles = [
   },
 ];
 
-const socialMediaOptions = [
-  "Twitter",
-  "LinkedIn",
-  "Behance",
-  "Facebook",
-  "Instagram",
-  "Github",
-  "LeetCode",
-  "CodeForces",
-  "HackerEarth",
-  "HackerRank",
-];
-
 const SocialProfile = () => {
   const [profiles, setProfiles] = useState(initialProfiles);
   const [newProfile, setNewProfile] = useState({ name: "", url: "" });
@@ -50,43 +61,55 @@ const SocialProfile = () => {
   const [editingId, setEditingId] = useState(null);
   const [showNewProfileForm, setShowNewProfileForm] = useState(false);
   const navigate = useNavigate();
-  const uid = localStorage.getItem("userUid");
+  
+  // Get the token from localStorage
+  const token = localStorage.getItem("token");
+  
+  // Configure axios headers with authentication
+  const authAxios = axios.create({
+    baseURL: '/api',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        fetchProfiles(uid);
-      } else {
-        navigate("/");
-      }
-    });
+    // Check authentication and fetch profiles
+    if (token) {
+      fetchProfiles();
+    } else {
+      navigate("/login"); // Redirect to login if no token
+    }
   }, [navigate]);
 
-  const fetchProfiles = async (userId) => {
-    const dbRef = ref(getDatabase());
-    const userSnapshot = await get(
-      child(dbRef, `users/${userId}/socialProfileId`)
-    );
-    if (userSnapshot.exists()) {
-      const socialProfileId = userSnapshot.val();
-      const profileSnapshot = await get(
-        child(dbRef, `socialProfiles/${socialProfileId}/links`)
-      );
-      if (profileSnapshot.exists()) {
-        setProfiles(profileSnapshot.val());
+  const fetchProfiles = async () => {
+    try {
+      const response = await authAxios.get('/social-profiles');
+      if (response.data && response.data.length > 0) {
+        setProfiles(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching profiles:", error);
+      if (error.response && error.response.status === 401) {
+        // Handle unauthorized (expired token)
+        localStorage.removeItem("token");
+        navigate("/login");
       }
     }
   };
 
-  const saveProfiles = async (userId, profiles) => {
-    const db = getDatabase();
-    const userRef = ref(db, `users/${userId}`);
-    let socialProfileId = (await get(child(userRef, "socialProfileId"))).val();
-    if (!socialProfileId) {
-      socialProfileId = generateUUID();
-      await set(child(userRef, "socialProfileId"), socialProfileId);
+  const saveProfiles = async (updatedProfiles) => {
+    try {
+      await authAxios.post('/social-profiles', { links: updatedProfiles });
+      return true;
+    } catch (error) {
+      console.error("Error saving profiles:", error);
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+      return false;
     }
-    await set(ref(db, `socialProfiles/${socialProfileId}/links`), profiles);
   };
 
   const handleInputChange = (e) => {
@@ -99,16 +122,17 @@ const SocialProfile = () => {
       alert("Please enter a valid profile name and URL starting with http");
       return;
     }
+    
     const updatedProfiles = [
       ...profiles,
       { ...newProfile, id: generateUUID() },
     ];
-    setProfiles(updatedProfiles);
-    setNewProfile({ name: "", url: "" });
-    setShowNewProfileForm(false);
-    const user = auth.currentUser;
-    if (user) {
-      await saveProfiles(uid, updatedProfiles);
+    
+    const success = await saveProfiles(updatedProfiles);
+    if (success) {
+      setProfiles(updatedProfiles);
+      setNewProfile({ name: "", url: "" });
+      setShowNewProfileForm(false);
     }
   };
 
@@ -122,10 +146,9 @@ const SocialProfile = () => {
 
   const handleDeleteProfile = async (id) => {
     const updatedProfiles = profiles.filter((profile) => profile.id !== id);
-    setProfiles(updatedProfiles);
-    const user = auth.currentUser;
-    if (user) {
-      await saveProfiles(uid, updatedProfiles);
+    const success = await saveProfiles(updatedProfiles);
+    if (success) {
+      setProfiles(updatedProfiles);
     }
   };
 
@@ -135,11 +158,10 @@ const SocialProfile = () => {
   };
 
   const handleSaveProfile = async () => {
-    setEditingId(null);
-    setIsEditing(false);
-    const user = auth.currentUser;
-    if (user) {
-      await saveProfiles(uid, profiles);
+    const success = await saveProfiles(profiles);
+    if (success) {
+      setEditingId(null);
+      setIsEditing(false);
     }
   };
 
@@ -237,25 +259,5 @@ const SocialProfile = () => {
     </div>
   );
 };
-
-function generateUUID() {
-  var d = new Date().getTime();
-  var d2 =
-    (typeof performance !== "undefined" &&
-      performance.now &&
-      performance.now() * 1000) ||
-    0;
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16;
-    if (d > 0) {
-      r = (d + r) % 16 | 0;
-      d = Math.floor(d / 16);
-    } else {
-      r = (d2 + r) % 16 | 0;
-      d2 = Math.floor(d2 / 16);
-    }
-    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-  });
-}
 
 export default SocialProfile;
